@@ -24,9 +24,9 @@ class GetGiftsUseCase(
                 }
                 is OrderType.Descending -> {
                     when (giftsOrder) {
-                        is GiftsOrder.Title -> gifts.sortedBy { it.title.lowercase() }
-                        is GiftsOrder.Owner -> gifts.sortedBy { it.ownerName.lowercase() }
-                        is GiftsOrder.Price -> gifts.sortedBy { it.price }
+                        is GiftsOrder.Title -> gifts.sortedByDescending { it.title.lowercase() }
+                        is GiftsOrder.Owner -> gifts.sortedByDescending { it.ownerName.lowercase() }
+                        is GiftsOrder.Price -> gifts.sortedByDescending { it.price }
                     }
                 }
             }

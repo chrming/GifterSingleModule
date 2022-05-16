@@ -10,4 +10,10 @@ sealed class OrderType {
             is Descending -> Ascending
         }
     }
+    operator fun not(): OrderType {
+        return when(this){
+            is Ascending ->  Descending
+            is Descending -> Ascending
+        }
+    }
 }

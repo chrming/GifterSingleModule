@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.gift.gift_list
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,4 +85,3 @@ fun GiftListScreen(
         }
     }
 }
-//TODO Ascending switch doesn't work

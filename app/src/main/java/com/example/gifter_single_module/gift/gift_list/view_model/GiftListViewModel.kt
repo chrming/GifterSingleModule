@@ -65,7 +65,6 @@ class GiftListViewModel @Inject constructor(
     }
 
     private fun getGifts(giftsOrder: GiftsOrder) {
-        Log.d("CHM", "getGifts launched")
         getGiftsJob?.cancel()
         getGiftsJob = giftsUseCase.getGifts(giftsOrder = giftsOrder)
             .onEach { gifts ->

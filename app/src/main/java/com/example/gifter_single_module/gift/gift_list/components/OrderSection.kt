@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.gift.gift_list.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,8 +56,10 @@ fun OrderSection(
             Switch(
                 checked = switchCheckedState.value,
                 onCheckedChange = {
-                    onOrderChange(giftsOrder.copy(giftsOrder.orderType.copy()))
+                    var newOrder = !giftsOrder.orderType
                     switchCheckedState.value = !switchCheckedState.value
+                    onOrderChange(giftsOrder.copy(newOrder))
+//                    Log.d("CHM", "OrderType changed to ${giftsOrder.orderType}")
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = MaterialTheme.colors.primary,
