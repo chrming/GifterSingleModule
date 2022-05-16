@@ -4,9 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -34,11 +32,12 @@ fun PreviewGiftItem() {
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GiftItem(
     gift: Gift,
     modifier: Modifier = Modifier,
-    onClick: @Composable () -> Unit
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -47,8 +46,9 @@ fun GiftItem(
         elevation = 10.dp,
         border = BorderStroke(1.dp, SolidColor(Color.Black)),
         shape = RoundedCornerShape(16.dp),
+        onClick = onClick
 
-        ) {
+    ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()

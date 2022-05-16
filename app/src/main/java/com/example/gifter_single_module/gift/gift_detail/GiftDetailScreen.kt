@@ -9,12 +9,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gifter_single_module.components.CustomTextField
 import com.example.gifter_single_module.gift.gift_detail.view_model.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.view_model.GiftDetailViewModel
 import com.example.gifter_single_module.gift.gift_detail.view_model.UiEvent
@@ -23,7 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun GiftDetailScreen(
     viewModel: GiftDetailViewModel = hiltViewModel(),
-    onLaunch: () -> Unit
+    onLaunch: () -> Unit,
 ) {
     val giftTitleState = viewModel.giftTitle.value
     val giftDescriptionState = viewModel.giftDescription.value
@@ -73,73 +75,61 @@ fun GiftDetailScreen(
                     contentDescription = null,
                     modifier = Modifier.size(200.dp)
                 )
-                TextField(
-                    value = giftTitleState.text,
-                    onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredTitle(it)) },
-//                        onFocusChange = { viewModel.onEvent(GiftDetailEvent.ChangedTitleFocus(it)) },
-                    label = { Text(text = "Title") },
-                    placeholder = { Text(text = giftTitleState.hint) },
-                    modifier = Modifier.height(50.dp)
+                Row {
+                    CustomTextField(
+                        text = giftTitleState.text,
+                        label = "Title",
+                        modifier = Modifier.weight(1f),
+                        onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredTitle(it)) },
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CustomTextField(
+                        text = giftOwnerNameState.text,
+                        label = "Owner",
+                        modifier = Modifier.weight(1f),
+                        onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredOwnerName(it)) },
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                CustomTextField(
+                    text = giftDescriptionState.text,
+                    label = "Description",
+                    modifier = Modifier,
+                    onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredDescription(it)) },
+                    singleLine = false,
+                    maxLines = 9
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                TextField(
-                    value = giftOwnerNameState.text,
-                    onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredOwnerName(it)) },
-//                        onFocusChange = { viewModel.onEvent(GiftDetailEvent.ChangedOwnerNameFocus(it)) },
-                    label = { Text(text = "Owner") },
-                    placeholder = { Text(text = giftOwnerNameState.hint) },
-                    modifier = Modifier.height(30.dp)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    TextField(
-                        value = giftDescriptionState.text,
-                        onValueChange = {
-                            viewModel.onEvent(
-                                GiftDetailEvent.EnteredDescription(
-                                    it
-                                )
-                            )
-                        },
-//                            onFocusChange = {viewModel.onEvent(GiftDetailEvent.ChangedDescriptionFocus(it))},
-                        label = { Text(text = "Description") },
-                        placeholder = { Text(text = giftDescriptionState.hint) },
-//                            modifier = Modifier.weight(0.75f)
+                    CustomTextField(
+                        text = giftMarkState.text,
+                        label = "Mark",
+                        modifier = Modifier.weight(1f),
+                        onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredMark(it)) },
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CustomTextField(
+                        text = giftPriceState.text,
+                        label = "Price",
+                        modifier = Modifier.weight(1f),
+                        onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredPrice(it)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     )
                 }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextField(
-                    value = giftMarkState.text,
-                    onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredMark(it)) },
-//                        onFocusChange = { viewModel.onEvent(GiftDetailEvent.ChangedMarkFocus(it)) },
-                    placeholder = { Text(text = giftMarkState.hint) },
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                TextField(
-                    value = giftPriceState.text,
-                    onValueChange = { viewModel.onEvent(GiftDetailEvent.EnteredPrice(it)) },
-                    //onFocusChange = { viewModel.onEvent(GiftDetailEvent.ChangedPriceFocus(it)) },
-                    placeholder = { Text(text = giftPriceState.hint) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.weight(0.75f)
-                )
-                Spacer(modifier = Modifier.width(60.dp))
             }
         }
     }
 }
 
 //TODO Design
-//TODO Input restrictions
+//TODO Title Input restrictions
+//TODO Name Input restrictions
+//TODO Description Input restrictions
+//TODO Mark Input restrictions
+//TODO Price Input restrictions
+//TODO Choose ownerName from a list of ownerNames
+//TODO Add picture from https://...

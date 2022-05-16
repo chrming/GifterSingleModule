@@ -2,6 +2,7 @@ package com.example.gifter_single_module.gift.gift_list
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.compiler.plugins.kotlin.ComposeFqNames.remember
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,7 +25,8 @@ import com.example.gifter_single_module.util.routs.Screen
 @Composable
 fun GiftListScreen(
     viewModel: GiftListViewModel = hiltViewModel(),
-    onClickNavigate: (String) -> Unit
+    onClickNavigate: (String) -> Unit,
+
 ) {
     val state = viewModel.giftsState.value
     val scaffoldState = rememberScaffoldState()
@@ -77,7 +80,7 @@ fun GiftListScreen(
                     GiftItem(
                         gift = gift,
                         onClick = {
-                            PopupGiftItem(gift = gift)
+                            onClickNavigate(Screen.AddEditGiftScreen.route + "?giftId=${gift.giftId}")
                         }
                     )
                 }

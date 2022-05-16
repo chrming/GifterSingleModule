@@ -9,9 +9,11 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.gifter_single_module.gift.gift_detail.GiftDetailScreen
 import com.example.gifter_single_module.gift.gift_list.GiftListScreen
 import com.example.gifter_single_module.ui.theme.Gifter_single_moduleTheme
@@ -46,7 +48,15 @@ fun Gifter() {
                 navController.navigate(route)
             })
         }
-        composable(Screen.AddEditGiftScreen.route) {
+        composable(
+            route = Screen.AddEditGiftScreen.route + "?giftId={giftId}",
+            arguments = listOf(
+                navArgument(name = "giftId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            )
+        ) {
             GiftDetailScreen(onLaunch = {
                 navController.navigateUp()
             })
