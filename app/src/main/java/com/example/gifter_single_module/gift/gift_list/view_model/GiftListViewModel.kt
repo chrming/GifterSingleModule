@@ -1,9 +1,10 @@
 package com.example.gifter_single_module.gift.gift_list.view_model
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gifter_single_module.gift.gift_list.use_case.GiftUseCaseWrapper
+import com.example.gifter_single_module.gift.gift_list.use_case.GiftListUseCaseWrapper
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
 import com.example.gifter_single_module.util.OrderType
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GiftListViewModel @Inject constructor(
-    private val giftsUseCase: GiftUseCaseWrapper
+    private val giftsUseCase: GiftListUseCaseWrapper
 ) : ViewModel() {
 
     private val _giftsState = mutableStateOf(GiftListState())
@@ -34,8 +35,8 @@ class GiftListViewModel @Inject constructor(
         when (event) {
             is GiftListEvent.Order -> {
                 if (
-                    _giftsState.value.giftsOrder::class == event.giftsOrder::class
-                    && giftsState.value.giftsOrder.orderType == event.giftsOrder.orderType
+                    _giftsState.value.giftsOrder::class == event.giftsOrder::class &&
+                    giftsState.value.giftsOrder.orderType == event.giftsOrder.orderType
                 ) {
                     return
                 }
@@ -64,8 +65,9 @@ class GiftListViewModel @Inject constructor(
     }
 
     private fun getGifts(giftsOrder: GiftsOrder) {
+        Log.d("CHM", "getGifts launched")
         getGiftsJob?.cancel()
-        getGiftsJob = giftsUseCase.getGifts(giftsOrder)
+        getGiftsJob = giftsUseCase.getGifts(giftsOrder = giftsOrder)
             .onEach { gifts ->
                 _giftsState.value = giftsState.value.copy(
                     gifts = gifts,

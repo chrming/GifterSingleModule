@@ -41,100 +41,99 @@ fun PopupGiftItem(
     modifier: Modifier = Modifier,
 ) {
     Popup(
-        alignment = Alignment.Center,
-        content = {
-            Card(
+        alignment = Alignment.Center
+    ) {
+        Card(
+            modifier = modifier
+                .wrapContentSize()
+                .padding(8.dp),
+            elevation = 10.dp,
+            border = BorderStroke(1.dp, SolidColor(Color.Black)),
+            shape = RoundedCornerShape(16.dp)
+
+        ) {
+            Column(
                 modifier = modifier
-                    .wrapContentSize()
-                    .padding(8.dp),
-                elevation = 10.dp,
-                border = BorderStroke(1.dp, SolidColor(Color.Black)),
-                shape = RoundedCornerShape(16.dp)
-
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .padding(16.dp)
             ) {
-                Column(
+                Row(
                     modifier = modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = gift.title,
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = gift.ownerName,
-                            style = MaterialTheme.typography.h6,
-                            color = MaterialTheme.colors.onSurface,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    Spacer(modifier = modifier.height(4.dp))
-
-
-                    // Place for a picture
-                    Image(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .height(150.dp),
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Gift's image"
-                    )
-
-
                     Text(
-                        text = gift.description,
-                        style = MaterialTheme.typography.body1,
+                        text = gift.title,
+                        style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.onSurface,
-                        maxLines = 5,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = modifier.height(4.dp))
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        gift.mark?.let {
-                            Text(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                text = it,
-                                style = MaterialTheme.typography.subtitle1,
-                                color = MaterialTheme.colors.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.Start
+                    Text(
+                        text = gift.ownerName,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Spacer(modifier = modifier.height(4.dp))
 
-                            )
-                        }
-                        gift.price?.let {
-                            Text(
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                text = "$it zł",
-                                style = MaterialTheme.typography.subtitle1,
-                                color = MaterialTheme.colors.onSurface,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.End
-                            )
-                        }
+
+                // Place for a picture
+                Image(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Gift's image"
+                )
+
+
+                Text(
+                    text = gift.description,
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface,
+                    maxLines = 5,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = modifier.height(4.dp))
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    gift.mark?.let {
+                        Text(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            text = it,
+                            style = MaterialTheme.typography.subtitle1,
+                            color = MaterialTheme.colors.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Start
+
+                        )
+                    }
+                    gift.price?.let {
+                        Text(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            text = "$it zł",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = MaterialTheme.colors.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.End
+                        )
                     }
                 }
             }
         }
-    )
+    }
 }
 

@@ -1,77 +1,167 @@
 package com.example.gifter_single_module.gift.gift_detail.view_model
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
-import com.example.gifter_single_module.gift.gift_list.use_case.GiftUseCaseWrapper
-import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
-import com.example.gifter_single_module.util.OrderType
+import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
+import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GiftDetailViewModel @Inject constructor(
-    private val giftsUseCase: GiftUseCaseWrapper
+    private val giftUseCase: GiftDetailUseCaseWrapper,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _giftsState = mutableStateOf(GiftsState())
-    val giftsState = _giftsState
+    private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
+    val giftTitle = _giftTitle
 
-    private var lastDeletedGift: Gift? = null
+    private val _giftDescription =
+        mutableStateOf(GiftTextFieldState(hint = "Enter description"))
+    val giftDescription = _giftDescription
 
-    private var getGiftsJob: Job? = null
+    private val _giftOwnersName =
+        mutableStateOf(GiftTextFieldState(hint = "Enter owners name"))
+    val giftOwnersName = _giftOwnersName
+
+    private val _giftPrice = mutableStateOf(GiftTextFieldState(hint = "Price: zł"))
+    val giftPrice = _giftPrice
+
+    private val _giftMark = mutableStateOf(GiftTextFieldState(hint = "Mark: Sony"))
+    val giftMark = _giftMark
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private var currentGiftId: Int? = null
+    private var currentOwnerId: Int? = null
+
 
     init {
-        getGifts(GiftsOrder.Owner(OrderType.Descending))
-    }
-
-    fun onEvent(event: GiftsEvent) {
-        when (event) {
-            is GiftsEvent.Order -> {
-                if (
-                    _giftsState.value.giftsOrder::class == event.giftsOrder::class
-                    && giftsState.value.giftsOrder.orderType == event.giftsOrder.orderType
-                ) {
-                    return
-                }
-                getGifts(event.giftsOrder)
-            }
-            is GiftsEvent.ToggleOrderSection -> {
+        savedStateHandle.get<Int>("giftId")?.let { giftId ->
+            if (giftId != -1) {
                 viewModelScope.launch {
-                    _giftsState.value = giftsState.value.copy(
-                        isOrderSectionVisible = !giftsState.value.isOrderSectionVisible
-                    )
-                }
-            }
-            is GiftsEvent.DeleteGift -> {
-                viewModelScope.launch {
-                    giftsUseCase.deleteGift(event.gift)
-                    lastDeletedGift = event.gift
-                }
-            }
-            is GiftsEvent.RestoreGift -> {
-                viewModelScope.launch {
-                    giftsUseCase.addEditGift(lastDeletedGift ?: return@launch)
-                    lastDeletedGift = null
+                    giftUseCase.getGift(giftId)?.also {
+                        _giftTitle.value = giftTitle.value.copy(
+                            text = it.title,
+                            isHintVisible = false
+                        )
+                        _giftDescription.value = giftDescription.value.copy(
+                            text = it.description,
+                            isHintVisible = false
+                        )
+                        _giftOwnersName.value = giftOwnersName.value.copy(
+                            text = it.ownerName,
+                            isHintVisible = false
+                        )
+                        it.price?.let {
+                            _giftPrice.value = giftPrice.value.copy(
+                                text = it.toString(),
+                                isHintVisible = false
+                            )
+                        }
+                        it.mark?.let { it ->
+                            _giftMark.value = giftMark.value.copy(
+                                text = it,
+                                isHintVisible = false
+                            )
+                        }
+                        currentGiftId = it.giftId
+                        currentOwnerId = it.ownerId
+                    }
                 }
             }
         }
     }
 
-    private fun getGifts(giftsOrder: GiftsOrder) {
-        getGiftsJob?.cancel()
-        getGiftsJob = giftsUseCase.getGifts(giftsOrder)
-            .onEach { gifts ->
-                _giftsState.value = giftsState.value.copy(
-                    gifts = gifts,
-                    giftsOrder = giftsOrder
+    fun onEvent(event: GiftDetailEvent) {
+        when (event) {
+            is GiftDetailEvent.EnteredTitle -> {
+                _giftTitle.value = giftTitle.value.copy(
+                    text = event.value
                 )
             }
-            .launchIn(viewModelScope)
+            is GiftDetailEvent.ChangedTitleFocus -> {
+                _giftTitle.value = giftTitle.value.copy(
+                    isHintVisible = !event.focusState.isFocused && giftTitle.value.text.isBlank()
+                )
+            }
+            is GiftDetailEvent.EnteredDescription -> {
+                _giftDescription.value = giftDescription.value.copy(
+                    text = event.value
+                )
+            }
+            is GiftDetailEvent.ChangedDescriptionFocus -> {
+                _giftDescription.value = giftDescription.value.copy(
+                    isHintVisible = !event.focusState.isFocused && giftDescription.value.text.isBlank()
+                )
+            }
+            is GiftDetailEvent.EnteredOwnerName -> {
+                _giftOwnersName.value = giftOwnersName.value.copy(
+                    text = event.value
+                )
+            }
+            is GiftDetailEvent.ChangedOwnerName -> {
+                _giftOwnersName.value = giftOwnersName.value.copy(
+                    isHintVisible = !event.focusState.isFocused && giftOwnersName.value.text.isBlank()
+                )
+            }
+
+            is GiftDetailEvent.EnteredPrice -> {
+                _giftPrice.value = giftPrice.value.copy(
+                    text = event.value
+                )
+            }
+            is GiftDetailEvent.ChangedPriceFocus -> {
+                _giftPrice.value = giftPrice.value.copy(
+                    isHintVisible = !event.focusState.isFocused && giftPrice.value.text.isBlank()
+                )
+            }
+
+            is GiftDetailEvent.EnteredMark -> {
+                _giftMark.value = giftMark.value.copy(
+                    text = event.value
+                )
+            }
+            is GiftDetailEvent.ChangedMarkFocus -> {
+                _giftMark.value = giftMark.value.copy(
+                    isHintVisible = !event.focusState.isFocused && giftMark.value.text.isBlank()
+                )
+            }
+            is GiftDetailEvent.SaveGift -> {
+                viewModelScope.launch {
+                    try {
+                        var price = giftPrice.value.text
+                        if (price == "") {
+                            price = "0"
+                        }
+                        giftUseCase.addEditGift.invoke(
+
+                            Gift(
+                                title = giftTitle.value.text,
+                                description = giftDescription.value.text,
+                                ownerName = giftOwnersName.value.text,
+                                mark = giftMark.value.text,
+                                price = price.toInt(),
+                                giftId = currentGiftId,
+                                ownerId = currentOwnerId
+                            )
+                            //TODO() Add Owner Id -> getProfileIdByName(ownerName)
+                        )
+                        _eventFlow.emit(UiEvent.SaveGift)
+                    } catch (e: InvalidGiftException) {
+                        Log.d("CHM", "Exception caught!")
+                        _eventFlow.emit(UiEvent.ShowSnackbar(e.message ?: "Invalid gift"))
+                    }
+                }
+            }
+        }
     }
 }

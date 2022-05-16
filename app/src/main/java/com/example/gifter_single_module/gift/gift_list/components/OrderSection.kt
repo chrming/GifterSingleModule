@@ -51,7 +51,7 @@ fun OrderSection(
                 selected = giftsOrder is GiftsOrder.Price,
                 onClick = { onOrderChange(GiftsOrder.Price(giftsOrder.orderType)) })
         }
-        Row(modifier = modifier.weight(1f)) {
+        Column(modifier = modifier.weight(1f)) {
             Switch(
                 checked = switchCheckedState.value,
                 onCheckedChange = {

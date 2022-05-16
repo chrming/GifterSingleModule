@@ -1,8 +1,6 @@
 package com.example.gifter_single_module.profile.data_source
 
 import androidx.room.*
-import com.example.entities.Profile
-import com.example.entities.ProfileWithGifts
 import com.example.gifter_single_module.profile.profile_detail.model.Profile
 import com.example.gifter_single_module.profile.profile_detail.model.ProfileWithGifts
 import kotlinx.coroutines.flow.Flow

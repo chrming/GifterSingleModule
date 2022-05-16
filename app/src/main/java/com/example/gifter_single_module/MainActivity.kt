@@ -6,12 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.gifter_single_module.gift.gift_detail.GiftDetailScreen
+import com.example.gifter_single_module.gift.gift_list.GiftListScreen
 import com.example.gifter_single_module.ui.theme.Gifter_single_moduleTheme
+import com.example.gifter_single_module.util.routs.Screen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +27,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color.DarkGray
                 ) {
-                    Greeting("Android")
+                    Gifter()
                 }
             }
         }
@@ -30,14 +37,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun Gifter() {
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Gifter_single_moduleTheme {
-        Greeting("Android")
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = Screen.GiftListScreen.route) {
+        composable(Screen.GiftListScreen.route) {
+            GiftListScreen(onClickNavigate = { route ->
+                navController.navigate(route)
+            })
+        }
+        composable(Screen.AddEditGiftScreen.route) {
+            GiftDetailScreen(onLaunch = {
+                navController.navigateUp()
+            })
+        }
     }
 }
