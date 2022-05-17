@@ -1,7 +1,9 @@
-package com.example.gifter_single_module.gift.gift_detail.view_model
+package com.example.gifter_single_module.gift.gift_detail.presentation
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,12 +25,10 @@ class GiftDetailViewModel @Inject constructor(
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
     val giftTitle = _giftTitle
 
-    private val _giftDescription =
-        mutableStateOf(GiftTextFieldState(hint = "Enter description"))
+    private val _giftDescription = mutableStateOf(GiftTextFieldState(hint = "Enter description"))
     val giftDescription = _giftDescription
 
-    private val _giftOwnersName =
-        mutableStateOf(GiftTextFieldState(hint = "Enter owners name"))
+    private val _giftOwnersName = mutableStateOf(GiftTextFieldState(hint = "Enter owners name"))
     val giftOwnersName = _giftOwnersName
 
     private val _giftPrice = mutableStateOf(GiftTextFieldState(hint = "Price: zł"))
@@ -40,9 +40,10 @@ class GiftDetailViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    var validationState by mutableStateOf(GiftDetailValidationState())
+
     private var currentGiftId: Int? = null
     private var currentOwnerId: Int? = null
-
 
     init {
         savedStateHandle.get<Int>("giftId")?.let { giftId ->
@@ -61,12 +62,10 @@ class GiftDetailViewModel @Inject constructor(
                             text = it.ownerName,
                             isHintVisible = false
                         )
-                        it.price?.let {
-                            _giftPrice.value = giftPrice.value.copy(
-                                text = it.toString(),
-                                isHintVisible = false
-                            )
-                        }
+                        _giftPrice.value = giftPrice.value.copy(
+                            text = it.price.toString(),
+                            isHintVisible = false
+                        )
                         it.mark?.let { it ->
                             _giftMark.value = giftMark.value.copy(
                                 text = it,
@@ -113,8 +112,8 @@ class GiftDetailViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused && giftOwnersName.value.text.isBlank()
                 )
             }
-
             is GiftDetailEvent.EnteredPrice -> {
+                Log.d("CHM", "Entered price Event started")
                 _giftPrice.value = giftPrice.value.copy(
                     text = event.value
                 )
@@ -124,7 +123,6 @@ class GiftDetailViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused && giftPrice.value.text.isBlank()
                 )
             }
-
             is GiftDetailEvent.EnteredMark -> {
                 _giftMark.value = giftMark.value.copy(
                     text = event.value
@@ -137,9 +135,9 @@ class GiftDetailViewModel @Inject constructor(
             }
             is GiftDetailEvent.SaveGift -> {
                 viewModelScope.launch {
-                    try {
+                    try {//TODO Should not be here
                         var price = giftPrice.value.text
-                        if (price == "") {
+                        if (price.isEmpty()) {
                             price = "0"
                         }
                         giftUseCase.addEditGift.invoke(

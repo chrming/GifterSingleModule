@@ -1,6 +1,5 @@
-package com.example.gifter_single_module.gift.gift_list.view_model
+package com.example.gifter_single_module.gift.gift_list.presentation
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

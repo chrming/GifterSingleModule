@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_detail.view_model
+package com.example.gifter_single_module.gift.gift_detail.presentation
 
 import androidx.compose.ui.focus.FocusState
 

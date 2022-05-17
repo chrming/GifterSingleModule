@@ -23,7 +23,7 @@ import kotlin.math.max
 @Preview
 @Composable
 fun PreviewCustomTextField() {
-    CustomTextField(text = "abba", label = "AbbA", onValueChange = {})
+    CustomTextField(text = "abba", label = "AbbA", onValueChange = {}, onFocusChange = {})
 }
 
 @Composable
@@ -37,7 +37,7 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-//    onFocusChange: (FocusState) -> Unit
+    onFocusChange: (FocusState) -> Unit = {}
 ) {
     val lightBlue = Color(0xffd8e6ff)
     val blue = Color(0xff76a9ff)

@@ -70,14 +70,14 @@ fun GiftItem(
                 {
                     Text(
                         text = gift.title,
-                        style = MaterialTheme.typography.h5,
+                        style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = gift.ownerName,
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

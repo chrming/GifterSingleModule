@@ -6,6 +6,7 @@ import com.example.gifter_single_module.gift.data_source.GiftDatabase
 import com.example.gifter_single_module.gift.gift_detail.use_case.AddEditGiftUseCase
 import com.example.gifter_single_module.gift.gift_detail.use_case.GetGiftUseCase
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
+import com.example.gifter_single_module.gift.gift_detail.use_case.validation.*
 import com.example.gifter_single_module.gift.repository.GiftRepository
 import com.example.gifter_single_module.gift.repository.GiftRepositoryImpl
 import com.example.gifter_single_module.gift.gift_list.use_case.*
@@ -76,7 +77,12 @@ class AppModule {
     fun provideGiftDetailUseCases(repository: GiftRepository): GiftDetailUseCaseWrapper {
         return GiftDetailUseCaseWrapper(
             getGift = GetGiftUseCase(repository),
-            addEditGift = AddEditGiftUseCase(repository)
+            addEditGift = AddEditGiftUseCase(repository),
+            validateTitle = ValidateTitleUseCase(),
+            validateDescription = ValidateDescriptionUseCase(),
+            validateOwnerName = ValidateOwnerNameUseCase(),
+            validateMark = ValidateMarkUseCase(),
+            validatePrice = ValidatePriceUseCase()
         )
     }
 

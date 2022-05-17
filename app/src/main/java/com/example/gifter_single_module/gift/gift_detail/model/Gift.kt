@@ -29,7 +29,7 @@ data class Gift(
 
     val mark: String? = null,
 
-    val price: Int? = null,
+    val price: Int,
 
    // @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     //val picture: Bitmap? = null
