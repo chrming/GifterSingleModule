@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.gift.gift_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -54,7 +55,7 @@ fun GiftDetailScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
+                onClick = {//TODO save impossible if TextError.*.value = true
                     viewModel.onEvent(GiftDetailEvent.SaveGift)
                 },
                 backgroundColor = MaterialTheme.colors.primary
@@ -81,12 +82,7 @@ fun GiftDetailScreen(
                     OutlinedTextField(
                         value = giftTitleState.text,
                         onValueChange = {
-                            if (it.length <= MaxChars.title) {
-                                TextError.titleError.value = false
-                                viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
-                            } else {
-                                TextError.titleError.value = true
-                            }
+                            viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
                         },
                         isError = TextError.titleError.value,
                         modifier = Modifier.weight(1f),
@@ -96,6 +92,7 @@ fun GiftDetailScreen(
                             Text(text = giftTitleState.text.length.toString() + "/" + MaxChars.title.toString())
                         }
                     )
+
                     Spacer(modifier = Modifier.width(8.dp))
                     Column(
                         modifier = Modifier
@@ -160,7 +157,7 @@ fun GiftDetailScreen(
                     isError = TextError.descriptionError.value,
                     trailingIcon = {
                         Text(text = giftDescriptionState.text.length.toString() + "/" + MaxChars.description.toString())
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(

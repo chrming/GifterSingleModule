@@ -11,7 +11,6 @@ class AddEditGiftUseCase(
 ) {
     @Throws(InvalidGiftException::class)
     suspend operator fun invoke(gift: Gift) {
-
         if (gift.title.isBlank()) {
 //            Log.d("CHM", "title blank: ${gift.title}")
             TextError.titleError.value = true
@@ -27,11 +26,21 @@ class AddEditGiftUseCase(
             TextError.descriptionError.value = true
             throw InvalidGiftException("Gifts description cannot be blank.")
         }
-        if (gift.price.toString().isBlank()) {
+        if (gift.price.toString().isBlank() || gift.price.toString().isEmpty()) {
 //            Log.d("CHM", "price blank: ${gift.price}")
             TextError.priceError.value = true
             throw InvalidGiftException("There are no free gifts...")
         }
-        repository.addEditGift(gift)
+        if (listOf(
+                TextError.titleError.value,
+                TextError.descriptionError.value,
+                TextError.ownerNameError.value,
+                TextError.markError.value,
+                TextError.priceError.value
+            ).any{ it }
+        ) {
+            throw InvalidGiftException("Invalid data.")
+        }
+            repository.addEditGift(gift)
     }
 }

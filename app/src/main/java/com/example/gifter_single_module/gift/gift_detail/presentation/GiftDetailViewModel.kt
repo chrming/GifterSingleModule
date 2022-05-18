@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
+import com.example.gifter_single_module.gift.gift_list.util.TextError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,10 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GiftDetailViewModel @Inject constructor(
-    private val giftUseCase: GiftDetailUseCaseWrapper,//
+    private val giftUseCase: GiftDetailUseCaseWrapper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-//
+    //
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
     val giftTitle = _giftTitle
 
@@ -83,6 +84,13 @@ class GiftDetailViewModel @Inject constructor(
     fun onEvent(event: GiftDetailEvent) {
         when (event) {
             is GiftDetailEvent.EnteredTitle -> {
+                val validationResult = giftUseCase.validateTitle(event.value)
+                TextError.titleError.value = !validationResult.isSuccess
+                if (TextError.titleError.value) {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                    }
+                }
                 _giftTitle.value = giftTitle.value.copy(
                     text = event.value
                 )
@@ -93,6 +101,13 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredDescription -> {
+                val validationResult = giftUseCase.validateDescription(event.value)
+                TextError.descriptionError.value = !validationResult.isSuccess
+                if (TextError.descriptionError.value) {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                    }
+                }
                 _giftDescription.value = giftDescription.value.copy(
                     text = event.value
                 )
@@ -113,7 +128,13 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredPrice -> {
-                Log.d("CHM", "Entered price Event started")
+                val validationResult = giftUseCase.validatePrice(event.value)
+                TextError.priceError.value = !validationResult.isSuccess
+                if (TextError.priceError.value) {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                    }
+                }
                 _giftPrice.value = giftPrice.value.copy(
                     text = event.value
                 )
@@ -124,6 +145,13 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredMark -> {
+                val validationResult = giftUseCase.validateMark(event.value)
+                TextError.markError.value = !validationResult.isSuccess
+                if (TextError.markError.value) {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                    }
+                }
                 _giftMark.value = giftMark.value.copy(
                     text = event.value
                 )
@@ -138,16 +166,15 @@ class GiftDetailViewModel @Inject constructor(
                     try {//TODO Should not be here
                         var price = giftPrice.value.text
                         if (price.isEmpty()) {
-                            price = "0"
+                            price = "0.00"
                         }
                         giftUseCase.addEditGift.invoke(
-
                             Gift(
                                 title = giftTitle.value.text,
                                 description = giftDescription.value.text,
                                 ownerName = giftOwnersName.value.text,
                                 mark = giftMark.value.text,
-                                price = price.toInt(),
+                                price = price.toFloat(),
                                 giftId = currentGiftId,
                                 ownerId = currentOwnerId
                             )

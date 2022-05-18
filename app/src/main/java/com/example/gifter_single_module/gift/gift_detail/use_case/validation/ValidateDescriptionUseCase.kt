@@ -3,19 +3,19 @@ package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 class ValidateDescriptionUseCase {
     operator fun invoke(description: String): Result {
         if (description.isBlank() || description.isEmpty()) {
-            return Result(successful = false, errorMessages = "Description cannot be blank or empty.")
+            return Result(isSuccess = false, errorMessages = "Description cannot be blank or empty.")
         }
-        if (description.contains(regex = Regex("""^(\w|\s|\d|[\\!?.,\-+=_"':])"""))) {
+        if (description.contains(regex = Regex("""([^a-zA-Z0-9\s\\!?.,\-+=_"':])+"""))) {
             return Result(
-                successful = false,
+                isSuccess = false,
                 errorMessages = "Description cannot contain special characters.\nOnly !?.,-+=_'\" are allowed."
             )
         }
-        return Result(successful = true)
+        return Result(isSuccess = true)
     }
 
     data class Result(
-        val successful: Boolean,
+        val isSuccess: Boolean,
         val errorMessages: String? = null
     )
 }

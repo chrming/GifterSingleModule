@@ -25,7 +25,7 @@ fun PreviewGiftItem() {
         ownerName = "Owner Name",
         title = "Gift's title",
         description = "Gifts short description",
-        price = 20,
+        price = 20.0f,
         mark = "Mark"
     )
     GiftItem(gift = gift, onClick = {})

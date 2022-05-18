@@ -2,16 +2,16 @@ package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
 class ValidateMarkUseCase {
     operator fun invoke(mark: String): Result {
-        if (mark.contains(regex = Regex("""^(\w|\s|\d|[\\!?.,\-+=_"':])"""))) {
+        if (mark.contains(regex = Regex("""([^a-zA-Z0-9\s\\!?.,\-+=_"':])+"""))) {
             return Result(
-                successful = false,
+                isSuccess = false,
                 errorMessages = "Mark cannot contain special characters.\nOnly !?.,-+=_'\" are allowed."
             )
         }
-        return Result(successful = true)
+        return Result(isSuccess = true)
     }
     data class Result(
-        val successful: Boolean,
+        val isSuccess: Boolean,
         val errorMessages: String? = null
     )
 }

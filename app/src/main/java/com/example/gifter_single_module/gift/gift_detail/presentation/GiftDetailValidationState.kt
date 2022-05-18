@@ -1,5 +1,5 @@
 package com.example.gifter_single_module.gift.gift_detail.presentation
-
+//TODO delete
 data class GiftDetailValidationState(
     val title: String = "",
     val titleError: String? = null,

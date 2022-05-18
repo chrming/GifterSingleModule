@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2792b54f65177204f6e862be92be5c4a",
+    "identityHash": "726667e5bd06f1a5dc846b233192b33c",
     "entities": [
       {
         "tableName": "Profile",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "Gift",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`giftId` INTEGER, `ownerId` INTEGER, `ownerName` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `mark` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`giftId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`giftId` INTEGER, `ownerId` INTEGER, `ownerName` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `mark` TEXT, `price` REAL NOT NULL, PRIMARY KEY(`giftId`))",
         "fields": [
           {
             "fieldPath": "giftId",
@@ -85,7 +85,7 @@
           {
             "fieldPath": "price",
             "columnName": "price",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
@@ -102,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2792b54f65177204f6e862be92be5c4a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '726667e5bd06f1a5dc846b233192b33c')"
     ]
   }
 }
