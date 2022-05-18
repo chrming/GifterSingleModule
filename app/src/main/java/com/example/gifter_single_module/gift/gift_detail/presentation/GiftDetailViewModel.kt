@@ -18,10 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GiftDetailViewModel @Inject constructor(
-    private val giftUseCase: GiftDetailUseCaseWrapper,
+    private val giftUseCase: GiftDetailUseCaseWrapper,//
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
+//
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
     val giftTitle = _giftTitle
 

@@ -20,4 +20,4 @@ class ValidateDescriptionUseCase {
     )
 }
 
-//^([1-9][0-9]{0,2})?(\.[0-9]?)?$
+//^([1-9][0-9]{0,2})?(\.[0-9]?)?$  asdfasdf
