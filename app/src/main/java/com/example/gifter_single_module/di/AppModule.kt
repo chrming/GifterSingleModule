@@ -78,6 +78,7 @@ class AppModule {
         return GiftDetailUseCaseWrapper(
             getGift = GetGiftUseCase(repository),
             addEditGift = AddEditGiftUseCase(repository),
+            validateSaveGift = ValidateSaveGiftUseCase(),
             validateTitle = ValidateTitleUseCase(),
             validateDescription = ValidateDescriptionUseCase(),
             validateOwnerName = ValidateOwnerNameUseCase(),

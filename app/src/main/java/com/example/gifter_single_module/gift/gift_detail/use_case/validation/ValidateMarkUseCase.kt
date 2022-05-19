@@ -1,11 +1,20 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
+import com.example.gifter_single_module.gift.gift_list.util.MaxChars
+
 class ValidateMarkUseCase {
     operator fun invoke(mark: String): Result {
-        if (mark.contains(regex = Regex("""([^a-zA-Z0-9\s\\!?.,\-+=_"':])+"""))) {
+        if (mark.length > MaxChars.mark)
+        {
             return Result(
                 isSuccess = false,
-                errorMessages = "Mark cannot contain special characters.\nOnly !?.,-+=_'\" are allowed."
+                errorMessages = "Mark can contain ${MaxChars.mark} characters."
+            )
+        }
+        if (mark.contains(regex = Regex("""([^\w\d\s\\!?.,\-+=_"':])+"""))) {
+            return Result(
+                isSuccess = false,
+                errorMessages = "Allowed special characters: !?.,-+=_'\""
             )
         }
         return Result(isSuccess = true)

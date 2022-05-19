@@ -9,6 +9,8 @@ import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
 import com.example.gifter_single_module.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -25,6 +27,9 @@ class GiftListViewModel @Inject constructor(
     private var lastDeletedGift: Gift? = null
 
     private var getGiftsJob: Job? = null
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         getGifts(GiftsOrder.Owner(OrderType.Descending))
@@ -52,6 +57,7 @@ class GiftListViewModel @Inject constructor(
                 viewModelScope.launch {
                     giftsUseCase.deleteGift(event.gift)
                     lastDeletedGift = event.gift
+                    _eventFlow.emit(UiEvent.ShowSnackbar(message = "Note has been deleted"))
                 }
             }
             is GiftListEvent.RestoreGift -> {

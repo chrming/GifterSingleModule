@@ -1,9 +1,7 @@
 package com.example.gifter_single_module.gift.gift_detail.presentation
 
 import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,8 +30,9 @@ class GiftDetailViewModel @Inject constructor(
     private val _giftOwnersName = mutableStateOf(GiftTextFieldState(hint = "Enter owners name"))
     val giftOwnersName = _giftOwnersName
 
-    private val _giftPrice = mutableStateOf(GiftTextFieldState(hint = "Price: zł"))
+    private val _giftPrice = mutableStateOf(GiftTextFieldState(text = "0.00",hint = "0.00"))
     val giftPrice = _giftPrice
+    //TODO text should be empty, different way of validate price
 
     private val _giftMark = mutableStateOf(GiftTextFieldState(hint = "Mark: Sony"))
     val giftMark = _giftMark
@@ -41,7 +40,8 @@ class GiftDetailViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var validationState by mutableStateOf(GiftDetailValidationState())
+    private val _textError = mutableStateOf(TextError())
+    val textError = _textError
 
     private var currentGiftId: Int? = null
     private var currentOwnerId: Int? = null
@@ -85,25 +85,26 @@ class GiftDetailViewModel @Inject constructor(
         when (event) {
             is GiftDetailEvent.EnteredTitle -> {
                 val validationResult = giftUseCase.validateTitle(event.value)
-                TextError.titleError.value = !validationResult.isSuccess
-                if (TextError.titleError.value) {
+                _textError.value = textError.value.copy(
+                    titleError = !validationResult.isSuccess,
+                    titleErrorMessage = validationResult.errorMessages
+                )
+                if (_textError.value.titleError) {
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
                     }
                 }
                 _giftTitle.value = giftTitle.value.copy(
                     text = event.value
-                )
-            }
-            is GiftDetailEvent.ChangedTitleFocus -> {
-                _giftTitle.value = giftTitle.value.copy(
-                    isHintVisible = !event.focusState.isFocused && giftTitle.value.text.isBlank()
                 )
             }
             is GiftDetailEvent.EnteredDescription -> {
                 val validationResult = giftUseCase.validateDescription(event.value)
-                TextError.descriptionError.value = !validationResult.isSuccess
-                if (TextError.descriptionError.value) {
+                _textError.value = textError.value.copy(
+                    descriptionError = !validationResult.isSuccess,
+                    descriptionErrorMessage = validationResult.errorMessages
+                )
+                if (_textError.value.descriptionError) {
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
                     }
@@ -112,42 +113,30 @@ class GiftDetailViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is GiftDetailEvent.ChangedDescriptionFocus -> {
-                _giftDescription.value = giftDescription.value.copy(
-                    isHintVisible = !event.focusState.isFocused && giftDescription.value.text.isBlank()
-                )
-            }
-            is GiftDetailEvent.EnteredOwnerName -> {
+            is GiftDetailEvent.EnteredOwnerName -> { //TODO change to validation from name list
                 _giftOwnersName.value = giftOwnersName.value.copy(
                     text = event.value
-                )
-            }
-            is GiftDetailEvent.ChangedOwnerName -> {
-                _giftOwnersName.value = giftOwnersName.value.copy(
-                    isHintVisible = !event.focusState.isFocused && giftOwnersName.value.text.isBlank()
                 )
             }
             is GiftDetailEvent.EnteredPrice -> {
                 val validationResult = giftUseCase.validatePrice(event.value)
-                TextError.priceError.value = !validationResult.isSuccess
-                if (TextError.priceError.value) {
+                _textError.value = textError.value.copy(
+                    priceError = !validationResult.isSuccess,
+                    priceErrorMessage = validationResult.errorMessages
+                )
+                if (_textError.value.priceError) {
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
                     }
                 }
                 _giftPrice.value = giftPrice.value.copy(
                     text = event.value
-                )
-            }
-            is GiftDetailEvent.ChangedPriceFocus -> {
-                _giftPrice.value = giftPrice.value.copy(
-                    isHintVisible = !event.focusState.isFocused && giftPrice.value.text.isBlank()
                 )
             }
             is GiftDetailEvent.EnteredMark -> {
                 val validationResult = giftUseCase.validateMark(event.value)
-                TextError.markError.value = !validationResult.isSuccess
-                if (TextError.markError.value) {
+                _textError.value = textError.value.copy(markError = !validationResult.isSuccess, markErrorMessage = validationResult.errorMessages)
+                if (_textError.value.markError) {
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
                     }
@@ -156,25 +145,17 @@ class GiftDetailViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is GiftDetailEvent.ChangedMarkFocus -> {
-                _giftMark.value = giftMark.value.copy(
-                    isHintVisible = !event.focusState.isFocused && giftMark.value.text.isBlank()
-                )
-            }
             is GiftDetailEvent.SaveGift -> {
                 viewModelScope.launch {
-                    try {//TODO Should not be here
-                        var price = giftPrice.value.text
-                        if (price.isEmpty()) {
-                            price = "0.00"
-                        }
+                    try {
+                        giftUseCase.validateSaveGift(textError.value)
                         giftUseCase.addEditGift.invoke(
                             Gift(
                                 title = giftTitle.value.text,
                                 description = giftDescription.value.text,
                                 ownerName = giftOwnersName.value.text,
                                 mark = giftMark.value.text,
-                                price = price.toFloat(),
+                                price = giftPrice.value.text.toFloat(),
                                 giftId = currentGiftId,
                                 ownerId = currentOwnerId
                             )
@@ -182,7 +163,6 @@ class GiftDetailViewModel @Inject constructor(
                         )
                         _eventFlow.emit(UiEvent.SaveGift)
                     } catch (e: InvalidGiftException) {
-                        Log.d("CHM", "Exception caught!")
                         _eventFlow.emit(UiEvent.ShowSnackbar(e.message ?: "Invalid gift"))
                     }
                 }
@@ -190,3 +170,4 @@ class GiftDetailViewModel @Inject constructor(
         }
     }
 }
+//TODO onFocusChanged - useless for now

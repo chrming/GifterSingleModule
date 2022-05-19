@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +30,7 @@ fun PreviewGiftItem() {
         price = 20.0f,
         mark = "Mark"
     )
-    GiftItem(gift = gift, onClick = {})
+    GiftItem(gift = gift, onClick = {}, onDeleteClick = {})
 
 }
 
@@ -37,7 +39,8 @@ fun PreviewGiftItem() {
 fun GiftItem(
     gift: Gift,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -53,17 +56,20 @@ fun GiftItem(
             modifier = modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             Row(
                 modifier = modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .weight(1f)
+                        .height(IntrinsicSize.Min)
+                        .width(IntrinsicSize.Min),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceEvenly
                 )
@@ -131,6 +137,17 @@ fun GiftItem(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "Gift's image"
                     )
+                }
+                Column {
+                    IconButton(
+                        onClick = onDeleteClick,
+
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete Gift",
+                        )
+                    }
                 }
             }
 

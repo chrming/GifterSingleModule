@@ -1,20 +1,23 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
+import android.util.Log
 import com.example.gifter_single_module.gift.gift_list.util.MaxChars
+import com.example.gifter_single_module.util.uiText.UiText
 
 class ValidateTitleUseCase {
     operator fun invoke(title: String): Result {
-        if (title.isEmpty()) {
+        Log.d("CHM", "'${title}' ")
+        if (title.isBlank()) {
             return Result(isSuccess = false, errorMessages = "Title cannot be blank.")
         }
         if (title.length > MaxChars.title)
         {
-            return Result(isSuccess = false, errorMessages = "Title can contain 20 characters.")
+            return Result(isSuccess = false, errorMessages = "Title can contain ${MaxChars.title} characters.")
         }
-        if (title.contains(regex = Regex("""([^a-zA-Z0-9\s\\!?.,\-+=_"':])+"""))) {
+        if (title.contains(regex = Regex("""([^\w\d\s\\!?.,\-+=_"':])+"""))) {
             return Result(
                 isSuccess = false,
-                errorMessages = "Title cannot contain special characters.\nOnly !?.,-+=_'\" are allowed."
+                errorMessages = "Allowed special characters: !?.,-+=_'\""
             )
         }
         return Result(isSuccess = true)
@@ -26,3 +29,4 @@ class ValidateTitleUseCase {
     )
 }
 //TODO String resources
+//TODO handling errors

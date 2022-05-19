@@ -1,12 +1,14 @@
 package com.example.gifter_single_module.gift.gift_list.util
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-
-object TextError {
-    var titleError: MutableState<Boolean> = mutableStateOf(false)
-    var ownerNameError: MutableState<Boolean> = mutableStateOf(false)
-    var descriptionError: MutableState<Boolean> = mutableStateOf(false)
-    var markError: MutableState<Boolean> = mutableStateOf(false)
-    var priceError: MutableState<Boolean> = mutableStateOf(false)
-}
+data class TextError(
+    val titleError: Boolean = false,
+    val titleErrorMessage: String? = null,
+    val ownerNameError: Boolean = false,
+    val ownerNameErrorMessage: String? = null,
+    val descriptionError: Boolean = false,
+    val descriptionErrorMessage: String? = null,
+    val markError: Boolean = false,
+    val markErrorMessage: String? = null,
+    val priceError: Boolean = false,
+    val priceErrorMessage: String? = null
+)

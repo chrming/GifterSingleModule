@@ -10,10 +10,15 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gifter_single_module.gift.gift_detail.components.ErrorMessageText
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailViewModel
 import com.example.gifter_single_module.gift.gift_detail.presentation.UiEvent
@@ -34,6 +39,7 @@ fun GiftDetailScreen(
     val giftOwnerNameState = viewModel.giftOwnersName.value
     val giftPriceState = viewModel.giftPrice.value
     val giftMarkState = viewModel.giftMark.value
+    val textError = viewModel.textError.value
 
     val scaffoldState = rememberScaffoldState()
     var expanded by remember { mutableStateOf(false) }
@@ -42,7 +48,6 @@ fun GiftDetailScreen(
         viewModel.eventFlow.collectLatest {
             when (it) {
                 is UiEvent.ShowSnackbar -> {
-
                     scaffoldState.snackbarHostState.showSnackbar(message = it.message)
                 }
                 is UiEvent.SaveGift -> {
@@ -55,7 +60,7 @@ fun GiftDetailScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {//TODO save impossible if TextError.*.value = true
+                onClick = {
                     viewModel.onEvent(GiftDetailEvent.SaveGift)
                 },
                 backgroundColor = MaterialTheme.colors.primary
@@ -78,22 +83,24 @@ fun GiftDetailScreen(
                     contentDescription = null,
                     modifier = Modifier.size(200.dp)
                 )
+                OutlinedTextField(
+                    value = giftTitleState.text,
+                    onValueChange = {
+                        viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
+                    },
+                    isError = textError.titleError,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Title") },
+                    singleLine = true,
+                    trailingIcon = {
+                        Text(text = giftTitleState.text.length.toString() + "/" + MaxChars.title.toString())
+                    }
+                )
+                ErrorMessageText(
+                    isError = textError.titleError,
+                    errorMessage = textError.titleErrorMessage
+                )
                 Row {
-                    OutlinedTextField(
-                        value = giftTitleState.text,
-                        onValueChange = {
-                            viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
-                        },
-                        isError = TextError.titleError.value,
-                        modifier = Modifier.weight(1f),
-                        label = { Text("Title") },
-                        singleLine = true,
-                        trailingIcon = {
-                            Text(text = giftTitleState.text.length.toString() + "/" + MaxChars.title.toString())
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
                     Column(
                         modifier = Modifier
                             .weight(1f)
@@ -106,12 +113,11 @@ fun GiftDetailScreen(
                             readOnly = true,
                             modifier = Modifier.weight(1f),
                             label = { Text("Gift's owner") },
-                            isError = TextError.ownerNameError.value,
+                            isError = textError.ownerNameError,
                             placeholder = { Text(giftOwnerNameState.hint) },
                             trailingIcon = {
                                 IconButton(onClick = {
                                     expanded = !expanded
-                                    TextError.ownerNameError.value = false
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -138,74 +144,72 @@ fun GiftDetailScreen(
                                 }
                             }
                         }
+                        ErrorMessageText(
+                            isError = textError.ownerNameError,
+                            errorMessage = textError.ownerNameErrorMessage
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        OutlinedTextField(
+                            value = giftMarkState.text,
+                            onValueChange = {
+                                viewModel.onEvent(GiftDetailEvent.EnteredMark(it))
+                            },
+
+                            label = { Text("Mark") },
+                            singleLine = true,
+                            isError = textError.markError,
+                            trailingIcon = {
+                                Text(text = giftMarkState.text.length.toString() + "/" + MaxChars.mark.toString())
+                            }
+                        )
+                        ErrorMessageText(
+                            isError = textError.markError,
+                            errorMessage = textError.markErrorMessage
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = giftDescriptionState.text,
                     onValueChange = {
-                        if (it.length <= MaxChars.description) {
-                            TextError.descriptionError.value = false
-                            viewModel.onEvent(GiftDetailEvent.EnteredDescription(it))
-                        } else {
-                            TextError.descriptionError.value = true
-                        }
+                        viewModel.onEvent(GiftDetailEvent.EnteredDescription(it))
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Description") },
                     maxLines = 10,
-                    isError = TextError.descriptionError.value,
+                    isError = textError.descriptionError,
                     trailingIcon = {
                         Text(text = giftDescriptionState.text.length.toString() + "/" + MaxChars.description.toString())
-                    },
+                    }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    OutlinedTextField(
-                        value = giftMarkState.text,
-                        onValueChange = {
-                            if (it.length <= MaxChars.mark) {
-                                TextError.markError.value = false
-                                viewModel.onEvent(GiftDetailEvent.EnteredMark(it))
-                            } else {
-                                TextError.markError.value = true
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        label = { Text("Mark") },
-                        maxLines = 10,
-                        isError = TextError.markError.value,
-                        trailingIcon = {
-                            Text(text = giftMarkState.text.length.toString() + "/" + MaxChars.mark.toString())
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    OutlinedTextField(
-                        value = giftPriceState.text,
-                        onValueChange = {
-                            viewModel.onEvent(GiftDetailEvent.EnteredPrice(it))
-                        },
-                        modifier = Modifier.weight(1f),
-                        label = { Text("Price") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        singleLine = true,
-                        isError = TextError.priceError.value,
-                        trailingIcon = {
-                            Text(text = "zł")
-                        }
-                    )
-                }
+                ErrorMessageText(
+                    isError = textError.descriptionError,
+                    errorMessage = textError.descriptionErrorMessage
+                )
+                OutlinedTextField(
+                    value = giftPriceState.text,
+                    onValueChange = {
+                        viewModel.onEvent(GiftDetailEvent.EnteredPrice(it))
+                    },
+                    modifier = Modifier.width(150.dp),
+                    label = { Text("Price") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    isError = textError.priceError,
+                    trailingIcon = {
+                        Text(text = "zł")
+                    }
+                )
+                ErrorMessageText(
+                    isError = textError.priceError,
+                    errorMessage = textError.priceErrorMessage
+                )
+
             }
         }
     }
 }
-
 //TODO Design
-
-//TODO Price Input restrictions
 //TODO Add picture from https://...
 //TODO SQL Injection
