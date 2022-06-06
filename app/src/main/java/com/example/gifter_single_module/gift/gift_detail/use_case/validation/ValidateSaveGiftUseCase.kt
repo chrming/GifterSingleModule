@@ -1,8 +1,7 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
-import android.util.Log
 import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
-import com.example.gifter_single_module.gift.gift_list.util.TextError
+import com.example.gifter_single_module.gift.util.TextError
 
 
 class ValidateSaveGiftUseCase {

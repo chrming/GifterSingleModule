@@ -1,6 +1,5 @@
 package com.example.gifter_single_module.gift.gift_detail.presentation
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -8,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
-import com.example.gifter_single_module.gift.gift_list.util.TextError
+import com.example.gifter_single_module.gift.util.TextError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+//TODO Stacking scaffolds
 
 @HiltViewModel
 class GiftDetailViewModel @Inject constructor(

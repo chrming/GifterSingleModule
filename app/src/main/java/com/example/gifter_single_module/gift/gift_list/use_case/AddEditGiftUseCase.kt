@@ -3,7 +3,6 @@ package com.example.gifter_single_module.gift.gift_list.use_case
 import com.example.gifter_single_module.gift.repository.GiftRepository
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
-import com.example.gifter_single_module.gift.gift_list.util.TextError
 
 class AddEditGiftUseCase(
     private val repository: GiftRepository

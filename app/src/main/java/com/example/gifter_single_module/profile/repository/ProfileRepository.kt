@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_list.repository
+package com.example.gifter_single_module.profile.repository
 
 import com.example.gifter_single_module.profile.profile_detail.model.Profile
 import com.example.gifter_single_module.profile.profile_detail.model.ProfileWithGifts

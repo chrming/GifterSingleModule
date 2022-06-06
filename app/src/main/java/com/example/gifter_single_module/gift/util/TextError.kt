@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_list.util
+package com.example.gifter_single_module.gift.util
 
 data class TextError(
     val titleError: Boolean = false,

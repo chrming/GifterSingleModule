@@ -11,8 +11,8 @@ import com.example.gifter_single_module.gift.repository.GiftRepository
 import com.example.gifter_single_module.gift.repository.GiftRepositoryImpl
 import com.example.gifter_single_module.gift.gift_list.use_case.*
 import com.example.gifter_single_module.profile.data_source.ProfileDatabase
-import com.example.gifter_single_module.profile.profile_list.repository.ProfileRepository
-import com.example.gifter_single_module.profile.profile_list.repository.ProfileRepositoryImpl
+import com.example.gifter_single_module.profile.repository.ProfileRepository
+import com.example.gifter_single_module.profile.repository.ProfileRepositoryImpl
 import com.example.gifter_single_module.profile.profile_list.use_case.*
 import dagger.Module
 import dagger.Provides
@@ -91,7 +91,7 @@ class AppModule {
     @Singleton
     fun provideProfileUseCases(repository: ProfileRepository): ProfileUseCaseWrapper {
         return ProfileUseCaseWrapper(
-            getProfiles = GetProfilesUseCase(repository),
+            getProfileList = GetProfileListUseCase(repository),
             getProfile = GetProfileUseCase(repository),
             deleteProfile = DeleteProfileUseCase(repository),
             addEditProfile = AddEditProfileUseCase(repository),

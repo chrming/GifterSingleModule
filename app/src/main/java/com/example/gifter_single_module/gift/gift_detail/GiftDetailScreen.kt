@@ -1,6 +1,5 @@
 package com.example.gifter_single_module.gift.gift_detail
-
-import android.widget.Toast
+//TODO Refactor to AddEditGiftScreen and create separate screen GiftDetailScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,20 +9,15 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gifter_single_module.gift.gift_detail.components.ErrorMessageText
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailViewModel
 import com.example.gifter_single_module.gift.gift_detail.presentation.UiEvent
-import com.example.gifter_single_module.gift.gift_list.util.MaxChars
-import com.example.gifter_single_module.gift.gift_list.util.TextError
+import com.example.gifter_single_module.gift.util.MaxChars
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
