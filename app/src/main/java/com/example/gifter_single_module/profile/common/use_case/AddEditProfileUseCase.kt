@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_list.use_case
+package com.example.gifter_single_module.profile.common.use_case
 
 import com.example.gifter_single_module.profile.profile_detail.model.InvalidProfileException
 import com.example.gifter_single_module.profile.profile_detail.model.Profile

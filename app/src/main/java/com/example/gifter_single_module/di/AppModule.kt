@@ -7,13 +7,25 @@ import com.example.gifter_single_module.gift.gift_detail.use_case.AddEditGiftUse
 import com.example.gifter_single_module.gift.gift_detail.use_case.GetGiftUseCase
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
 import com.example.gifter_single_module.gift.gift_detail.use_case.validation.*
+import com.example.gifter_single_module.gift.gift_list.use_case.DeleteGiftUseCase
+import com.example.gifter_single_module.gift.gift_list.use_case.GetGiftsUseCase
+import com.example.gifter_single_module.gift.gift_list.use_case.GiftListUseCaseWrapper
 import com.example.gifter_single_module.gift.repository.GiftRepository
 import com.example.gifter_single_module.gift.repository.GiftRepositoryImpl
-import com.example.gifter_single_module.gift.gift_list.use_case.*
+import com.example.gifter_single_module.profile.common.use_case.AddEditProfileUseCase
+import com.example.gifter_single_module.profile.common.use_case.GetProfileUseCase
 import com.example.gifter_single_module.profile.data_source.ProfileDatabase
+import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileAddEditUseCaseWrapper
+import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateBirthdayDateUseCase
+import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateNameUseCase
+import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateNamedayDateUseCase
+import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateSaveProfileUseCase
+import com.example.gifter_single_module.profile.profile_list.use_case.DeleteProfileUseCase
+import com.example.gifter_single_module.profile.profile_list.use_case.GetProfileListUseCase
+import com.example.gifter_single_module.profile.profile_list.use_case.GetProfileWithGiftsUseCase
+import com.example.gifter_single_module.profile.profile_list.use_case.ProfileDetailUseCaseWrapper
 import com.example.gifter_single_module.profile.repository.ProfileRepository
 import com.example.gifter_single_module.profile.repository.ProfileRepositoryImpl
-import com.example.gifter_single_module.profile.profile_list.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -89,13 +101,26 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileUseCases(repository: ProfileRepository): ProfileUseCaseWrapper {
-        return ProfileUseCaseWrapper(
+    fun provideProfileListUseCases(repository: ProfileRepository): ProfileDetailUseCaseWrapper {
+        return ProfileDetailUseCaseWrapper(
             getProfileList = GetProfileListUseCase(repository),
             getProfile = GetProfileUseCase(repository),
             deleteProfile = DeleteProfileUseCase(repository),
             addEditProfile = AddEditProfileUseCase(repository),
             getProfileWithGifts = GetProfileWithGiftsUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileAddEditUseCases(repository: ProfileRepository): ProfileAddEditUseCaseWrapper {
+        return ProfileAddEditUseCaseWrapper(
+            getProfile = GetProfileUseCase(repository),
+            addEditProfile = AddEditProfileUseCase(repository),
+            validateName = ValidateNameUseCase(),
+            validateBirthdayDate = ValidateBirthdayDateUseCase(),
+            validateNamedayDate = ValidateNamedayDateUseCase(),
+            validateSaveProfile = ValidateSaveProfileUseCase(),
         )
     }
 }

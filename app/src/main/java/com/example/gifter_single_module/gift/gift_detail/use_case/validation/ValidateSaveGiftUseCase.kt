@@ -15,14 +15,6 @@ class ValidateSaveGiftUseCase {
                 textError.priceError
             ).any { it }
         ) {
-//            Log.d(
-//                "CHM", "list:\n" +
-//                        "titleError: ${textError.titleError}\n" +
-//                        "descriptionError: ${textError.descriptionError}\n" +
-//                        "ownerNameError: ${textError.ownerNameError}\n" +
-//                        "markError: ${textError.markError}\n" +
-//                        "priceError: ${textError.priceError}"
-//            )
             throw InvalidGiftException(message = "Invalid data")
         }
         return Result(isSuccess = true)

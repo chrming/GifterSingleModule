@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.gifter_single_module.gift.gift_detail.components.ErrorMessageText
+import com.example.gifter_single_module.components.ErrorMessageText
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailViewModel
 import com.example.gifter_single_module.gift.gift_detail.presentation.UiEvent
@@ -206,4 +206,3 @@ fun GiftDetailScreen(
 }
 //TODO Design
 //TODO Add picture from https://...
-//TODO SQL Injection

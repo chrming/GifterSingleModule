@@ -7,11 +7,11 @@ class ValidateBirthdayDateUseCase {
         if (date.isBlank()) {
             return Result(isSuccess = false, errorMessages = "Date cannot be blank.")
         }
-        if (date.length > MaxChars.birthdayDate)
+        if (date.length != MaxChars.birthdayDate)
         {
             return Result(isSuccess = false, errorMessages = "Date can contain ${MaxChars.birthdayDate} characters.")
         }
-        if (date.contains(regex = Regex("""([^\d])+"""))) {
+        if (date.contains(regex = Regex("""([^\d][^\d][^\d])+"""))) {
             return Result(
                 isSuccess = false,
                 errorMessages = "Date can contain only digits"

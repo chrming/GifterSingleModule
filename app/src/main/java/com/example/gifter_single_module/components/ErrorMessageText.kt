@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_detail.components
+package com.example.gifter_single_module.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth

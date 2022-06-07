@@ -50,7 +50,7 @@ fun Gifter() {
             items = listOf(
                 BottomNavigationItem(
                     name = "Profiles",
-                    route = Screen.ProfileListScreen.route,
+                    route = Screen.AddEditProfileScreen.route, // TODO change to ProfileListScreen
                     icon = Icons.Default.People
                 ),
                 BottomNavigationItem(
