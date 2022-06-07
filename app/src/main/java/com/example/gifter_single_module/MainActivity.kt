@@ -1,5 +1,5 @@
 package com.example.gifter_single_module
-
+//TODO clearing the backstack
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -35,37 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Gifter_single_moduleTheme {
                 // A surface container using the 'background' color from the theme
-                Scaffold(bottomBar = {
-                    BottomNavigationBar(
-                        items = listOf(
-                            BottomNavigationItem(
-                                name = "Profiles",
-                                route = Screen.ProfileListScreen.route,
-                                icon = Icons.Default.People,
-                                selected = false
-                            ),
-                            BottomNavigationItem(
-                                name = "Gifts",
-                                route = Screen.GiftListScreen.route,
-                                icon = Icons.Default.Cake,
-                                selected = true
-                            )
-                        ),
-                        onItemClick = {
-                            it.selected = !it.selected
-
-                        }
-                    )
-                }) {
-                Surface(
-                    modifier = Modifier.fillMaxSize().padding(it),
-                    color = Color.DarkGray
-                ) {
-                    Gifter()
-
-
-                    }
-                }
+                Gifter()
             }
         }
     }
@@ -73,51 +43,74 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Gifter() {
-
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.GiftListScreen.route) {
-
-        // Gifts composables
-        composable(Screen.GiftListScreen.route) {
-            GiftListScreen(onClickNavigate = { route ->
-                navController.navigate(route)
-            })
-        }
-        composable(
-            route = Screen.AddEditGiftScreen.route + "?giftId={giftId}",
-            arguments = listOf(
-                navArgument(name = "giftId") {
-                    type = NavType.IntType
-                    defaultValue = -1
-                }
+    Scaffold(bottomBar = {
+        BottomNavigationBar(
+            navController = navController,
+            items = listOf(
+                BottomNavigationItem(
+                    name = "Profiles",
+                    route = Screen.ProfileListScreen.route,
+                    icon = Icons.Default.People
+                ),
+                BottomNavigationItem(
+                    name = "Gifts",
+                    route = Screen.GiftListScreen.route,
+                    icon = Icons.Default.Cake
+                )
             )
+        )
+    }) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
-            GiftDetailScreen(onLaunch = {
-                navController.navigateUp()
-            })
-        }
+            NavHost(navController = navController, startDestination = Screen.GiftListScreen.route) {
 
-        // Profile composables
-        composable(Screen.ProfileListScreen.route) {
-            ProfileListScreen(onClickNavigate = { route ->
-                navController.navigate(route)
-            })
-        }
-        composable(
-            route = Screen.AddEditProfileScreen.route + "?profileId={profileId}",
-            arguments = listOf(
-                navArgument(name = "profileId") {
-                    type = NavType.IntType
-                    defaultValue = -1
+                // Gifts composables
+                composable(Screen.GiftListScreen.route) {
+                    GiftListScreen(onClickNavigate = { route ->
+                        navController.navigate(route)
+                    })
                 }
-            )
-        ) {
-            AddEditProfileScreen(onLaunch = {
-                navController.navigateUp()
-            })
-        }
-        composable(Screen.ProfileDetailScreen.route) {
-            ProfileDetailScreen()
+                composable(
+                    route = Screen.AddEditGiftScreen.route + "?giftId={giftId}",
+                    arguments = listOf(
+                        navArgument(name = "giftId") {
+                            type = NavType.IntType
+                            defaultValue = -1
+                        }
+                    )
+                ) {
+                    GiftDetailScreen(onLaunch = {
+                        navController.navigateUp()
+                    })
+                }
+
+                // Profile composables
+                composable(Screen.ProfileListScreen.route) {
+                    ProfileListScreen(onClickNavigate = { route ->
+                        navController.navigate(route)
+                    })
+                }
+                composable(
+                    route = Screen.AddEditProfileScreen.route + "?profileId={profileId}",
+                    arguments = listOf(
+                        navArgument(name = "profileId") {
+                            type = NavType.IntType
+                            defaultValue = -1
+                        }
+                    )
+                ) {
+                    AddEditProfileScreen(onLaunch = {
+                        navController.navigateUp()
+                    })
+                }
+                composable(Screen.ProfileDetailScreen.route) {
+                    ProfileDetailScreen()
+                }
+            }
         }
     }
 }
