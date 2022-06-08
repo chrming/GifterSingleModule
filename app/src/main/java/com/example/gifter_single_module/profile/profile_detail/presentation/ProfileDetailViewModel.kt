@@ -1,6 +1,7 @@
 package com.example.gifter_single_module.profile.profile_detail.presentation
 
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -57,7 +60,8 @@ class ProfileDetailViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _profileNamedayDate.value = profileNamedayDate.value.copy(
-                            text = DateFormat.format("dd/MM/yyyy", Date(it.namedayDate)).toString(),
+                            text = DateFormat.format("dd/MM/yyyy",
+                                it.namedayDate?.let { it1 -> Date(it1) }).toString(),
                             isHintVisible = false
                         )
                         currentProfileId = it.profileId
@@ -117,17 +121,19 @@ class ProfileDetailViewModel @Inject constructor(
             ProfileDetailEvent.SaveProfile -> {
                 viewModelScope.launch {
                     try {
-                        profileUseCase.validateSaveProfile(textError.value)
-                        profileUseCase.addEditProfile(
-                            Profile(
-                                profileId = currentProfileId,
-                                name = _profileName.value.text,
-                                birthdayDate =_profileBirthdayDate.value.text.toLong(),
-                                namedayDate = _profileNamedayDate.value.text.toLong()
+                        val result = profileUseCase.validateSaveProfile(textError.value)
+                        if (result.isSuccess) {
+                            profileUseCase.addEditProfile(
+                                Profile(
+                                    profileId = currentProfileId,
+                                    name = _profileName.value.text,
+                                    birthdayDate = if (profileBirthdayDate.value.text == "") -1 else _profileBirthdayDate.value.text.toLong(),
+                                    namedayDate = if (profileNamedayDate.value.text == "") -1 else _profileNamedayDate.value.text.toLong()
+                                )
                             )
-                        )
-                        _eventFlow.emit(UiEvent.SaveProfile)
-                    }catch (e: InvalidProfileException) {
+                            _eventFlow.emit(UiEvent.SaveProfile)
+                        }
+                    } catch (e: InvalidProfileException) {
                         _eventFlow.emit(UiEvent.ShowSnackbar(e.message ?: "Invalid profile"))
                     }
                 }
@@ -135,3 +141,4 @@ class ProfileDetailViewModel @Inject constructor(
         }
     }
 }
+//TODO date validation -> month and day in relation to year and month

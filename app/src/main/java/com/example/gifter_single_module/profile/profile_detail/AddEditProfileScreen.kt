@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.profile.profile_detail
 
+import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -54,7 +55,7 @@ fun AddEditProfileScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //viewModel.onEvent(GiftDetailEvent.SaveGift)
+                    viewModel.onEvent(ProfileDetailEvent.SaveProfile)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {

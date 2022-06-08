@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "726667e5bd06f1a5dc846b233192b33c",
+    "identityHash": "2c36deb0461f40233119e1e5bd1f7e16",
     "entities": [
       {
         "tableName": "Profile",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`profileId` INTEGER, `name` TEXT NOT NULL, `birthdayDate` INTEGER NOT NULL, `namedayDate` INTEGER NOT NULL, PRIMARY KEY(`profileId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`profileId` INTEGER, `name` TEXT NOT NULL, `birthdayDate` INTEGER NOT NULL, `namedayDate` INTEGER, PRIMARY KEY(`profileId`))",
         "fields": [
           {
             "fieldPath": "profileId",
@@ -30,7 +30,7 @@
             "fieldPath": "namedayDate",
             "columnName": "namedayDate",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -102,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '726667e5bd06f1a5dc846b233192b33c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2c36deb0461f40233119e1e5bd1f7e16')"
     ]
   }
 }

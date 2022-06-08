@@ -6,7 +6,7 @@ import com.example.gifter_single_module.profile.util.TextError
 class ValidateSaveProfileUseCase {
 
     @Throws(InvalidProfileException::class)
-   operator fun invoke(textError: TextError): Result {
+    operator fun invoke(textError: TextError): Result {
         if (listOf(
                 textError.nameError,
                 textError.birthdayDateError,

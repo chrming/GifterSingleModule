@@ -25,3 +25,4 @@ class ValidateNamedayDateUseCase {
         val errorMessages: String? = null
     )
 }
+//TODO validate day and month

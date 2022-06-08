@@ -13,6 +13,9 @@ class AddEditProfileUseCase(
             profile.name.isBlank() -> {
                 throw InvalidProfileException("Profiles name cannot be blank.")
             }
+            profile.birthdayDate == (-1).toLong() -> {
+                throw InvalidProfileException("Profiles name cannot be blank.")
+            }
             else -> repository.addEditProfile(profile)
         }
     }

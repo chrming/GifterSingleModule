@@ -14,7 +14,7 @@ data class Profile(
 
     val birthdayDate: Long,
 
-    val namedayDate: Long,
+    val namedayDate: Long?,
 
     //@ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     //val profilePicture: Bitmap? = null
