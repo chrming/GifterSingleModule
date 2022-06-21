@@ -50,7 +50,7 @@ fun Gifter() {
             items = listOf(
                 BottomNavigationItem(
                     name = "Profiles",
-                    route = Screen.AddEditProfileScreen.route, // TODO change to ProfileListScreen
+                    route = Screen.ProfileListScreen.route,
                     icon = Icons.Default.People
                 ),
                 BottomNavigationItem(
@@ -107,7 +107,14 @@ fun Gifter() {
                         navController.navigateUp()
                     })
                 }
-                composable(Screen.ProfileDetailScreen.route) {
+                composable(Screen.ProfileDetailScreen.route + "?profileId={profileId}",
+                    arguments = listOf(
+                        navArgument(name = "profileId") {
+                            type = NavType.IntType
+                            defaultValue = -1
+                        }
+                    )
+                ) {
                     ProfileDetailScreen()
                 }
             }

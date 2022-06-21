@@ -57,7 +57,7 @@ class GiftListViewModel @Inject constructor(
                 viewModelScope.launch {
                     giftsUseCase.deleteGift(event.gift)
                     lastDeletedGift = event.gift
-                    _eventFlow.emit(UiEvent.ShowSnackbar(message = "Note has been deleted"))
+                    _eventFlow.emit(UiEvent.ShowSnackbar(message = "Gift has been deleted"))
                 }
             }
             is GiftListEvent.RestoreGift -> {

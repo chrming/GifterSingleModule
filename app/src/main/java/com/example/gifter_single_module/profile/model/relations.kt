@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_detail.model
+package com.example.gifter_single_module.profile.model
 
 import androidx.room.Embedded
 import androidx.room.Relation

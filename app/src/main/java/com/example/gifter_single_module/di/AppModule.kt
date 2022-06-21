@@ -22,8 +22,7 @@ import com.example.gifter_single_module.profile.profile_detail.use_case.validati
 import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateSaveProfileUseCase
 import com.example.gifter_single_module.profile.profile_list.use_case.DeleteProfileUseCase
 import com.example.gifter_single_module.profile.profile_list.use_case.GetProfileListUseCase
-import com.example.gifter_single_module.profile.profile_list.use_case.GetProfileWithGiftsUseCase
-import com.example.gifter_single_module.profile.profile_list.use_case.ProfileDetailUseCaseWrapper
+import com.example.gifter_single_module.profile.profile_list.use_case.ProfileListUseCaseWrapper
 import com.example.gifter_single_module.profile.repository.ProfileRepository
 import com.example.gifter_single_module.profile.repository.ProfileRepositoryImpl
 import dagger.Module
@@ -101,13 +100,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileListUseCases(repository: ProfileRepository): ProfileDetailUseCaseWrapper {
-        return ProfileDetailUseCaseWrapper(
-            getProfileList = GetProfileListUseCase(repository),
-            getProfile = GetProfileUseCase(repository),
-            deleteProfile = DeleteProfileUseCase(repository),
+    fun provideProfileListUseCases(repository: ProfileRepository): ProfileListUseCaseWrapper {
+        return ProfileListUseCaseWrapper(
             addEditProfile = AddEditProfileUseCase(repository),
-            getProfileWithGifts = GetProfileWithGiftsUseCase(repository)
+            deleteProfile = DeleteProfileUseCase(repository),
+            getProfiles = GetProfileListUseCase(repository)
         )
     }
 

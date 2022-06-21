@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_list.components
+package com.example.gifter_single_module.profile.profile_list.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.gifter_single_module.components.DefaultRadioButton
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
+import com.example.gifter_single_module.profile.profile_list.util.ProfileOrder
 import com.example.gifter_single_module.util.OrderType
 
 @Preview(showBackground = true)
 @Composable
 fun OrderSectionPreview() {
-
     Column {
         OrderSection(onOrderChange = {})
     }
@@ -28,8 +28,8 @@ fun OrderSectionPreview() {
 @Composable
 fun OrderSection(
     modifier: Modifier = Modifier,
-    giftsOrder: GiftsOrder = GiftsOrder.Title(OrderType.Descending),
-    onOrderChange: (GiftsOrder) -> Unit,
+    profileOrder: ProfileOrder = ProfileOrder.Name(OrderType.Descending),
+    onOrderChange: (ProfileOrder) -> Unit,
 ) {
     val switchCheckedState = remember { mutableStateOf(true) }
     var orderType = if (switchCheckedState.value) "Descending" else "Ascending"
@@ -39,25 +39,25 @@ fun OrderSection(
     ) {
         Column(modifier = modifier.weight(1f)) {
             DefaultRadioButton(
-                text = "Owner",
-                selected = giftsOrder is GiftsOrder.Owner,
-                onClick = { onOrderChange(GiftsOrder.Owner(giftsOrder.orderType)) })
+                text = "Name",
+                selected = profileOrder is ProfileOrder.Name,
+                onClick = { onOrderChange(ProfileOrder.Name(profileOrder.orderType)) })
             DefaultRadioButton(
-                text = "Title",
-                selected = giftsOrder is GiftsOrder.Title,
-                onClick = { onOrderChange(GiftsOrder.Title(giftsOrder.orderType)) })
+                text = "Birthday",
+                selected = profileOrder is ProfileOrder.Birthday,
+                onClick = { onOrderChange(ProfileOrder.Birthday(profileOrder.orderType)) })
             DefaultRadioButton(
-                text = "Price",
-                selected = giftsOrder is GiftsOrder.Price,
-                onClick = { onOrderChange(GiftsOrder.Price(giftsOrder.orderType)) })
+                text = "Nameday",
+                selected = profileOrder is ProfileOrder.Nameday,
+                onClick = { onOrderChange(ProfileOrder.Nameday(profileOrder.orderType)) })
         }
         Column(modifier = modifier.weight(1f)) {
             Switch(
                 checked = switchCheckedState.value,
                 onCheckedChange = {
-                    var newOrder = !giftsOrder.orderType
+                    var newOrder = !profileOrder.orderType
                     switchCheckedState.value = !switchCheckedState.value
-                    onOrderChange(giftsOrder.copy(newOrder))
+                    onOrderChange(profileOrder.copy(newOrder))
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = MaterialTheme.colors.primary,

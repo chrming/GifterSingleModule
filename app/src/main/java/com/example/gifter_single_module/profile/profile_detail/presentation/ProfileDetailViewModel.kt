@@ -1,13 +1,12 @@
 package com.example.gifter_single_module.profile.profile_detail.presentation
 
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gifter_single_module.profile.profile_detail.model.InvalidProfileException
-import com.example.gifter_single_module.profile.profile_detail.model.Profile
+import com.example.gifter_single_module.profile.model.InvalidProfileException
+import com.example.gifter_single_module.profile.model.Profile
 import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileAddEditUseCaseWrapper
 import com.example.gifter_single_module.profile.util.TextError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,8 +14,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.sql.Date
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 

@@ -1,7 +1,7 @@
 package com.example.gifter_single_module.profile.repository
 
-import com.example.gifter_single_module.profile.profile_detail.model.Profile
-import com.example.gifter_single_module.profile.profile_detail.model.ProfileWithGifts
+import com.example.gifter_single_module.profile.model.Profile
+import com.example.gifter_single_module.profile.model.ProfileWithGifts
 import com.example.gifter_single_module.profile.data_source.ProfileDao
 import kotlinx.coroutines.flow.Flow
 

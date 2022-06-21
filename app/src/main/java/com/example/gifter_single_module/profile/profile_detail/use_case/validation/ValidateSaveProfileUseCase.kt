@@ -1,6 +1,6 @@
 package com.example.gifter_single_module.profile.profile_detail.use_case.validation
 
-import com.example.gifter_single_module.profile.profile_detail.model.InvalidProfileException
+import com.example.gifter_single_module.profile.model.InvalidProfileException
 import com.example.gifter_single_module.profile.util.TextError
 
 class ValidateSaveProfileUseCase {
