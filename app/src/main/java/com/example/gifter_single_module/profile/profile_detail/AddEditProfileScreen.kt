@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.profile.profile_detail
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,18 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gifter_single_module.components.ErrorMessageText
-import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileDetailEvent
-import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileDetailViewModel
+import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileAddEditEvent
+import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileAddEditViewModel
 import com.example.gifter_single_module.profile.profile_detail.presentation.UiEvent
 import com.example.gifter_single_module.profile.profile_detail.util.DateTransformation
 import com.example.gifter_single_module.profile.profile_detail.util.DayMonthTransformation
 import com.example.gifter_single_module.profile.util.MaxChars
+import com.example.gifter_single_module.util.routs.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddEditProfileScreen(
-    viewModel: ProfileDetailViewModel = hiltViewModel(),
-    onLaunch: () -> Unit
+    viewModel: ProfileAddEditViewModel = hiltViewModel(),
+    onLaunch: (String) -> Unit
 ) {
 
     val profileNameState = viewModel.profileName.value
@@ -40,7 +42,7 @@ fun AddEditProfileScreen(
                     scaffoldState.snackbarHostState.showSnackbar(message = it.message)
                 }
                 is UiEvent.SaveProfile -> {
-                    onLaunch()
+                    onLaunch(Screen.ProfileListScreen.route)
                 }
             }
         }
@@ -50,11 +52,11 @@ fun AddEditProfileScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(ProfileDetailEvent.SaveProfile)
+                    viewModel.onEvent(ProfileAddEditEvent.SaveProfile)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save gift")
+                Icon(imageVector = Icons.Default.Save, contentDescription = "Save profile")
             }
         },
         scaffoldState = scaffoldState
@@ -77,7 +79,7 @@ fun AddEditProfileScreen(
                     placeholder = {Text(text = profileNameState.hint)},
                     onValueChange = {
                         if (it.length <= MaxChars.name) {
-                            viewModel.onEvent(ProfileDetailEvent.EnteredProfileName(it))
+                            viewModel.onEvent(ProfileAddEditEvent.EnteredProfileName(it))
                         }
                     },
                     isError = textError.nameError,
@@ -98,7 +100,7 @@ fun AddEditProfileScreen(
                     placeholder = {Text(text = profileBirthdayDateState.hint)},
                     onValueChange = {
                         if (it.length <= MaxChars.birthdayDate) {
-                            viewModel.onEvent(ProfileDetailEvent.EnteredProfileBirthdayDate(it))
+                            viewModel.onEvent(ProfileAddEditEvent.EnteredProfileBirthdayDate(it))
                         }
                     },
                     isError = textError.birthdayDateError,
@@ -120,7 +122,7 @@ fun AddEditProfileScreen(
                     placeholder = {Text(text = profileNamedayDateState.hint)},
                     onValueChange = {
                         if (it.length <= MaxChars.namedayDate) {
-                            viewModel.onEvent(ProfileDetailEvent.EnteredProfileNamedayDate(it))
+                            viewModel.onEvent(ProfileAddEditEvent.EnteredProfileNamedayDate(it))
                         }
                     },
                     isError = textError.nameError,

@@ -96,7 +96,7 @@ fun ProfileListScreen(
                     ProfileItem(
                         profile = profile,
                         onClick = {
-                            onClickNavigate(Screen.AddEditGiftScreen.route + "?profileId=${profile.profileId}")
+                            onClickNavigate(Screen.ProfileDetailScreen.route + "?profileId=${profile.profileId}")
                         },
                         onDeleteClick = { viewModel.onEvent(ProfileListEvent.DeleteProfile(profile)) }
                     )

@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.gifter_single_module.components.DefaultRadioButton
-import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
 import com.example.gifter_single_module.profile.profile_list.util.ProfileOrder
 import com.example.gifter_single_module.util.OrderType
 

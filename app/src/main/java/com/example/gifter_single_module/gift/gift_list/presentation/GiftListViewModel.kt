@@ -3,8 +3,8 @@ package com.example.gifter_single_module.gift.gift_list.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gifter_single_module.gift.gift_list.use_case.GiftListUseCaseWrapper
 import com.example.gifter_single_module.gift.gift_detail.model.Gift
+import com.example.gifter_single_module.gift.gift_list.use_case.GiftListUseCaseWrapper
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
 import com.example.gifter_single_module.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel

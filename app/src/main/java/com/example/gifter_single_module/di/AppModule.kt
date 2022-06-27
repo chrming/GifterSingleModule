@@ -15,7 +15,9 @@ import com.example.gifter_single_module.gift.repository.GiftRepositoryImpl
 import com.example.gifter_single_module.profile.common.use_case.AddEditProfileUseCase
 import com.example.gifter_single_module.profile.common.use_case.GetProfileUseCase
 import com.example.gifter_single_module.profile.data_source.ProfileDatabase
+import com.example.gifter_single_module.profile.profile_detail.use_case.GetProfileWithGiftsUseCase
 import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileAddEditUseCaseWrapper
+import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileDetailUseCaseWrapper
 import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateBirthdayDateUseCase
 import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateNameUseCase
 import com.example.gifter_single_module.profile.profile_detail.use_case.validation.ValidateNamedayDateUseCase
@@ -37,7 +39,6 @@ import javax.inject.Singleton
 class AppModule {
 
     //  Provide Databases
-
     @Provides
     @Singleton
     fun providingGiftDatabase(app: Application): GiftDatabase {
@@ -118,6 +119,15 @@ class AppModule {
             validateBirthdayDate = ValidateBirthdayDateUseCase(),
             validateNamedayDate = ValidateNamedayDateUseCase(),
             validateSaveProfile = ValidateSaveProfileUseCase(),
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileDetailUseCases(repository: ProfileRepository): ProfileDetailUseCaseWrapper {
+        return ProfileDetailUseCaseWrapper(
+            getProfile = GetProfileUseCase(repository),
+            getWithGifts = GetProfileWithGiftsUseCase(repository)
         )
     }
 }

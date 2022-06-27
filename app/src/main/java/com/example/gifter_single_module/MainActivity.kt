@@ -1,5 +1,13 @@
 package com.example.gifter_single_module
 //TODO clearing the backstack
+//TODO relation between AddEditGiftScreen profileName and profiles
+//TODO viewModel for GiftDetail
+//TODO GiftDetailScreen as a middleman between list and addEdit
+//TODO proper date parsing
+//TODO caching images with coil library
+//TODO adding profile image
+//TODO maybe choosing date of birth instead typing it
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,10 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -69,11 +77,14 @@ fun Gifter() {
             NavHost(navController = navController, startDestination = Screen.GiftListScreen.route) {
 
                 // Gifts composables
+                // List Screen
                 composable(Screen.GiftListScreen.route) {
                     GiftListScreen(onClickNavigate = { route ->
                         navController.navigate(route)
                     })
                 }
+
+                // AddEdit Screen
                 composable(
                     route = Screen.AddEditGiftScreen.route + "?giftId={giftId}",
                     arguments = listOf(
@@ -89,11 +100,14 @@ fun Gifter() {
                 }
 
                 // Profile composables
+                // List Screen
                 composable(Screen.ProfileListScreen.route) {
                     ProfileListScreen(onClickNavigate = { route ->
                         navController.navigate(route)
                     })
                 }
+
+                // AddEdit Screen
                 composable(
                     route = Screen.AddEditProfileScreen.route + "?profileId={profileId}",
                     arguments = listOf(
@@ -103,10 +117,12 @@ fun Gifter() {
                         }
                     )
                 ) {
-                    AddEditProfileScreen(onLaunch = {
-                        navController.navigateUp()
+                    AddEditProfileScreen(onLaunch = { route ->
+                        navController.navigate(route)
                     })
                 }
+
+                // Detail Screen
                 composable(Screen.ProfileDetailScreen.route + "?profileId={profileId}",
                     arguments = listOf(
                         navArgument(name = "profileId") {
@@ -115,7 +131,9 @@ fun Gifter() {
                         }
                     )
                 ) {
-                    ProfileDetailScreen()
+                    ProfileDetailScreen(onClickNavigate = { route ->
+                        navController.navigate(route)
+                    })
                 }
             }
         }

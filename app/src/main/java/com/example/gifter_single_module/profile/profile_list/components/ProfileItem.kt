@@ -13,13 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.profile.model.Profile
-import com.example.gifter_single_module.profile.profile_detail.util.DateTransformation
 
 @Preview
 @Composable

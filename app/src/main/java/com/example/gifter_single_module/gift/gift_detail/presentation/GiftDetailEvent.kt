@@ -1,7 +1,5 @@
 package com.example.gifter_single_module.gift.gift_detail.presentation
 
-import androidx.compose.ui.focus.FocusState
-
 sealed class GiftDetailEvent {
     // title
     data class EnteredTitle(val value: String) : GiftDetailEvent()

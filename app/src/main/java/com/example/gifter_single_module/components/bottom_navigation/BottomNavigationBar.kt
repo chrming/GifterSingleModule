@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import kotlinx.coroutines.selects.select
 
 @Composable
 fun BottomNavigationBar(

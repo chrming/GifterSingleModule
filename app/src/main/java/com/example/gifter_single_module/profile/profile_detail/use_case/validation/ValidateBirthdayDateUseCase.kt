@@ -1,6 +1,5 @@
 package com.example.gifter_single_module.profile.profile_detail.use_case.validation
 
-import android.util.Log
 import com.example.gifter_single_module.profile.util.Const
 import com.example.gifter_single_module.profile.util.MaxChars
 import java.text.SimpleDateFormat

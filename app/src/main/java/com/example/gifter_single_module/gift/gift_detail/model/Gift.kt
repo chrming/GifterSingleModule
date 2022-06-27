@@ -1,6 +1,7 @@
 package com.example.gifter_single_module.gift.gift_detail.model
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(
     /*foreignKeys = [

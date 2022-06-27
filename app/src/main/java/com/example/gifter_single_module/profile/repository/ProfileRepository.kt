@@ -1,12 +1,12 @@
 package com.example.gifter_single_module.profile.repository
 
+import com.example.gifter_single_module.gift.gift_detail.model.Gift
 import com.example.gifter_single_module.profile.model.Profile
-import com.example.gifter_single_module.profile.model.ProfileWithGifts
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    suspend fun getProfileWithGifts(profileId: Int): List<ProfileWithGifts>
+    fun getProfileWithGifts(profileId: Int): Flow<List<Gift>>
 
     fun getProfiles(): Flow<List<Profile>>
 
