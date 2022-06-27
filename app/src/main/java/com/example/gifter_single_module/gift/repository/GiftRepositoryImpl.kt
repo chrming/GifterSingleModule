@@ -1,7 +1,8 @@
 package com.example.gifter_single_module.gift.repository
 
 import com.example.gifter_single_module.gift.data_source.GiftDao
-import com.example.gifter_single_module.gift.gift_detail.model.Gift
+import com.example.gifter_single_module.gift.model.Gift
+import com.example.gifter_single_module.gift.model.ProfileNameId
 import kotlinx.coroutines.flow.Flow
 
 class GiftRepositoryImpl(
@@ -13,6 +14,10 @@ class GiftRepositoryImpl(
 
     override suspend fun getGift(giftId: Int): Gift? {
         return dao.getGift(giftId)
+    }
+
+    override fun getProfileNameId(): Flow<List<ProfileNameId>> {
+        return dao.getProfileNameId()
     }
 
     override suspend fun addEditGift(gift: Gift) {

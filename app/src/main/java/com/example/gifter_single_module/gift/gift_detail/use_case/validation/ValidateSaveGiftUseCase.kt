@@ -1,6 +1,6 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
-import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
+import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.util.TextError
 
 

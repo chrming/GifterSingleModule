@@ -1,7 +1,7 @@
 package com.example.gifter_single_module.gift.gift_list.use_case
 
-import com.example.gifter_single_module.gift.gift_detail.model.Gift
-import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
+import com.example.gifter_single_module.gift.model.Gift
+import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.repository.GiftRepository
 
 class AddEditGiftUseCase(

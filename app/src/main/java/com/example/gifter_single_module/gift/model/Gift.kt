@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_detail.model
+package com.example.gifter_single_module.gift.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

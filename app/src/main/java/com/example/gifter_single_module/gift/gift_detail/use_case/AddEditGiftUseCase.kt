@@ -1,8 +1,8 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case
 
 //import android.util.Log
-import com.example.gifter_single_module.gift.gift_detail.model.Gift
-import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
+import com.example.gifter_single_module.gift.model.Gift
+import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.repository.GiftRepository
 
 class AddEditGiftUseCase(

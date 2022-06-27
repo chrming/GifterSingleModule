@@ -32,9 +32,9 @@ class ProfileDetailViewModel @Inject constructor(
         savedStateHandle.get<Int>("profileId")?.let { profileId ->
             viewModelScope.launch {
                 profile = profileDetailUseCase.getProfile(profileId)!!
+                getGifts(GiftsOrder.Title(OrderType.Descending))
             }
         }
-        getGifts(GiftsOrder.Title(OrderType.Descending))
     }
 
     private fun getGifts(giftsOrder: GiftsOrder) {
@@ -45,6 +45,7 @@ class ProfileDetailViewModel @Inject constructor(
                     _profileGiftListState.value = profileGiftListState.value.copy(
                         profileGiftList = gifts
                     )
+                    Log.d("chm", "profileId: $profileId")
                 }
                 .launchIn(viewModelScope)
         }

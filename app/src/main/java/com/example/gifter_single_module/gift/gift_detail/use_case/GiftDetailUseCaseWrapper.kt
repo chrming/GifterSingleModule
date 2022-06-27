@@ -5,6 +5,7 @@ import com.example.gifter_single_module.gift.gift_detail.use_case.validation.*
 data class GiftDetailUseCaseWrapper(
     val getGift: GetGiftUseCase,
     val addEditGift: AddEditGiftUseCase,
+    val getProfileNameId: GetProfileNameIdUseCase,
     val validateSaveGift: ValidateSaveGiftUseCase,
     val validateTitle: ValidateTitleUseCase,
     val validateDescription: ValidateDescriptionUseCase,

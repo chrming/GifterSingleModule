@@ -1,9 +1,11 @@
 package com.example.gifter_single_module.profile.profile_detail
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -18,6 +20,7 @@ import com.example.gifter_single_module.profile.profile_detail.util.DateTransfor
 import com.example.gifter_single_module.profile.profile_detail.util.DayMonthTransformation
 import com.example.gifter_single_module.util.routs.Screen
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProfileDetailScreen(
     viewModel: ProfileDetailViewModel = hiltViewModel(),
@@ -45,55 +48,57 @@ fun ProfileDetailScreen(
         },
         scaffoldState = scaffoldState
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    imageVector = Icons.Default.Image,
-                    contentDescription = null,
-                    modifier = Modifier.size(200.dp)
-                )
-                OutlinedTextField(
-                    value = profileName,
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Birthday Date") },
-                    singleLine = true,
-                    readOnly = true,
+        LazyVerticalGrid(columns = GridCells.Fixed(1)) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            imageVector = Icons.Default.Image,
+                            contentDescription = null,
+                            modifier = Modifier.size(200.dp)
+                        )
+                        OutlinedTextField(
+                            value = profileName,
+                            onValueChange = {},
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Birthday Date") },
+                            singleLine = true,
+                            readOnly = true,
 
-                )
+                            )
 
-                OutlinedTextField(
-                    value = profileBirthdayDate.toString(),
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Birthday Date") },
-                    singleLine = true,
-                    readOnly = true,
-                    visualTransformation = DateTransformation()
-                )
+                        OutlinedTextField(
+                            value = profileBirthdayDate.toString(),
+                            onValueChange = {},
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Birthday Date") },
+                            singleLine = true,
+                            readOnly = true,
+                            visualTransformation = DateTransformation()
+                        )
 
-                OutlinedTextField(
-                    value = profileNamedayDate?.toString() ?: "",
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Nameday Date") },
-                    singleLine = true,
-                    readOnly = true,
-                    visualTransformation = DayMonthTransformation()
-                )
-                LazyColumn() {
-                    items(giftList) { gift ->
-                        GiftItem(gift = gift, onClick = {
-                            onClickNavigate(Screen.AddEditGiftScreen.route + "?giftId=${gift.giftId}")
-                        }, onDeleteClick = {})
+                        OutlinedTextField(
+                            value = profileNamedayDate?.toString() ?: "",
+                            onValueChange = {},
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Nameday Date") },
+                            singleLine = true,
+                            readOnly = true,
+                            visualTransformation = DayMonthTransformation()
+                        )
                     }
                 }
+            }
+            items(giftList) { gift ->
+                GiftItem(gift = gift, onClick = {
+                    onClickNavigate(Screen.AddEditGiftScreen.route + "?giftId=${gift.giftId}")
+                }, onDeleteClick = {})
             }
         }
     }

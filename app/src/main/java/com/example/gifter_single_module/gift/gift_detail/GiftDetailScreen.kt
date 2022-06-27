@@ -1,5 +1,6 @@
 package com.example.gifter_single_module.gift.gift_detail
 //TODO Refactor to AddEditGiftScreen and create separate screen GiftDetailScreen
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +27,7 @@ fun GiftDetailScreen(
     onLaunch: () -> Unit,
 ) {
     // Temp for building list of ownerNames
-    val ownerNames = listOf("Tom", "Adam", "Alice", "Peg", "Al").sorted()
+    val owners = viewModel.ownerList
 
     val giftTitleState = viewModel.giftTitle.value
     val giftDescriptionState = viewModel.giftDescription.value
@@ -125,16 +126,17 @@ fun GiftDetailScreen(
                             onDismissRequest = { expanded = false },
                             modifier = Modifier.width(IntrinsicSize.Min)
                         ) {
-                            ownerNames.forEach() {
+                            owners.forEach() { profile ->
                                 DropdownMenuItem(onClick = {
                                     viewModel.onEvent(
                                         GiftDetailEvent.EnteredOwnerName(
-                                            it
+                                            profile.name
                                         )
                                     )
+                                    viewModel.currentOwnerId = profile.profileId
                                     expanded = false
                                 }) {
-                                    Text(text = it)
+                                    Text(text = profile.name)
                                 }
                             }
                         }

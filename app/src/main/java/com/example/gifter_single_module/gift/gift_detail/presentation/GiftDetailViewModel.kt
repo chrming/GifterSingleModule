@@ -1,16 +1,18 @@
 package com.example.gifter_single_module.gift.gift_detail.presentation
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gifter_single_module.gift.gift_detail.model.Gift
-import com.example.gifter_single_module.gift.gift_detail.model.InvalidGiftException
+import com.example.gifter_single_module.gift.model.Gift
+import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
+import com.example.gifter_single_module.gift.model.ProfileNameId
 import com.example.gifter_single_module.gift.util.TextError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,12 +33,15 @@ class GiftDetailViewModel @Inject constructor(
     private val _giftOwnersName = mutableStateOf(GiftTextFieldState(hint = "Enter owners name"))
     val giftOwnersName = _giftOwnersName
 
-    private val _giftPrice = mutableStateOf(GiftTextFieldState(text = "0.00",hint = "0.00"))
+    private val _giftPrice = mutableStateOf(GiftTextFieldState(text = "0.00", hint = "0.00"))
     val giftPrice = _giftPrice
     //TODO text should be empty, different way of validate price
 
     private val _giftMark = mutableStateOf(GiftTextFieldState(hint = "Mark: Sony"))
     val giftMark = _giftMark
+
+    private val _ownerList = mutableListOf<ProfileNameId>()
+    val ownerList = _ownerList
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -45,9 +50,12 @@ class GiftDetailViewModel @Inject constructor(
     val textError = _textError
 
     private var currentGiftId: Int? = null
-    private var currentOwnerId: Int? = null
+    var currentOwnerId: Int? = null
+
+    private var getProfilesJob: Job? = null
 
     init {
+        getProfileNames()
         savedStateHandle.get<Int>("giftId")?.let { giftId ->
             if (giftId != -1) {
                 viewModelScope.launch {
@@ -136,7 +144,10 @@ class GiftDetailViewModel @Inject constructor(
             }
             is GiftDetailEvent.EnteredMark -> {
                 val validationResult = giftUseCase.validateMark(event.value)
-                _textError.value = textError.value.copy(markError = !validationResult.isSuccess, markErrorMessage = validationResult.errorMessages)
+                _textError.value = textError.value.copy(
+                    markError = !validationResult.isSuccess,
+                    markErrorMessage = validationResult.errorMessages
+                )
                 if (_textError.value.markError) {
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
@@ -169,6 +180,17 @@ class GiftDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getProfileNames() {
+        getProfilesJob?.cancel()
+        getProfilesJob = giftUseCase.getProfileNameId()
+            .onEach { nameWithIdDuets ->
+                Log.d("chm"," nameWithIdDuets: $nameWithIdDuets")
+                _ownerList.clear()
+                _ownerList.addAll(nameWithIdDuets)
+            }
+            .launchIn(viewModelScope)
     }
 }
 //TODO onFocusChanged - useless for now
