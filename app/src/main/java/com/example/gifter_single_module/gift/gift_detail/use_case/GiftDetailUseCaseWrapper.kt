@@ -11,5 +11,6 @@ data class GiftDetailUseCaseWrapper(
     val validateDescription: ValidateDescriptionUseCase,
     val validateOwnerName: ValidateOwnerNameUseCase,
     val validateMark: ValidateMarkUseCase,
-    val validatePrice: ValidatePriceUseCase
+    val validatePrice: ValidatePriceUseCase,
+    val validateUrl: ValidateUrlUseCase
 )

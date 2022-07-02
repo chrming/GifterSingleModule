@@ -7,6 +7,7 @@ package com.example.gifter_single_module
 //TODO caching images with coil library
 //TODO adding profile image
 //TODO maybe choosing date of birth instead typing it
+//TODO if no profiles "to create gift first create a profile" or let user create gift without owner
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

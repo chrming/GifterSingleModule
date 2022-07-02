@@ -23,7 +23,9 @@ class GiftDetailViewModel @Inject constructor(
     private val giftUseCase: GiftDetailUseCaseWrapper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    //
+    private val _giftImage = mutableStateOf(GiftDetailImageState())
+    val giftImage = _giftImage
+
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
     val giftTitle = _giftTitle
 
@@ -35,7 +37,6 @@ class GiftDetailViewModel @Inject constructor(
 
     private val _giftPrice = mutableStateOf(GiftTextFieldState(text = "0.00", hint = "0.00"))
     val giftPrice = _giftPrice
-    //TODO text should be empty, different way of validate price
 
     private val _giftMark = mutableStateOf(GiftTextFieldState(hint = "Mark: Sony"))
     val giftMark = _giftMark
@@ -45,6 +46,9 @@ class GiftDetailViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _imageAlert = mutableStateOf(GiftDetailImageAlertState())
+    val imageAlert = _imageAlert
 
     private val _textError = mutableStateOf(TextError())
     val textError = _textError
@@ -157,6 +161,28 @@ class GiftDetailViewModel @Inject constructor(
                     text = event.value
                 )
             }
+            is GiftDetailEvent.IsAlert -> {
+                _imageAlert.value = imageAlert.value.copy(
+                    isAlert = event.value
+                )
+            }
+            is GiftDetailEvent.EnteredStoragePath -> TODO()
+            is GiftDetailEvent.EnteredUrl -> {
+                val validationResult = giftUseCase.validateUrl(event.value)
+                _textError.value = textError.value.copy(
+                    urlError = !validationResult.isSuccess,
+                    urlErrorMessage = validationResult.errorMessages
+                )
+                if (_textError.value.urlError) {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                    }
+                }
+                _giftImage.value = giftImage.value.copy(
+                    uploadOption = ImageSource.URL,
+                    source = event.value
+                )
+            }
             is GiftDetailEvent.SaveGift -> {
                 viewModelScope.launch {
                     try {
@@ -171,7 +197,6 @@ class GiftDetailViewModel @Inject constructor(
                                 giftId = currentGiftId,
                                 ownerId = currentOwnerId
                             )
-                            //TODO() Add Owner Id -> getProfileIdByName(ownerName)
                         )
                         _eventFlow.emit(UiEvent.SaveGift)
                     } catch (e: InvalidGiftException) {
@@ -186,11 +211,10 @@ class GiftDetailViewModel @Inject constructor(
         getProfilesJob?.cancel()
         getProfilesJob = giftUseCase.getProfileNameId()
             .onEach { nameWithIdDuets ->
-                Log.d("chm"," nameWithIdDuets: $nameWithIdDuets")
+                Log.d("chm", " nameWithIdDuets: $nameWithIdDuets")
                 _ownerList.clear()
                 _ownerList.addAll(nameWithIdDuets)
             }
             .launchIn(viewModelScope)
     }
 }
-//TODO onFocusChanged - useless for now

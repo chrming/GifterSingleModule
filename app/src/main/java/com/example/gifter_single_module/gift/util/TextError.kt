@@ -10,5 +10,7 @@ data class TextError(
     val markError: Boolean = false,
     val markErrorMessage: String? = null,
     val priceError: Boolean = false,
-    val priceErrorMessage: String? = null
+    val priceErrorMessage: String? = null,
+    val urlError: Boolean = false,
+    val urlErrorMessage: String? = null
 )

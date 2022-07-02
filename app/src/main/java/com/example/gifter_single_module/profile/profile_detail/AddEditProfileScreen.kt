@@ -1,6 +1,5 @@
 package com.example.gifter_single_module.profile.profile_detail
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*

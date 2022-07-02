@@ -95,7 +95,8 @@ class AppModule {
             validateDescription = ValidateDescriptionUseCase(),
             validateOwnerName = ValidateOwnerNameUseCase(),
             validateMark = ValidateMarkUseCase(),
-            validatePrice = ValidatePriceUseCase()
+            validatePrice = ValidatePriceUseCase(),
+            validateUrl = ValidateUrlUseCase()
         )
     }
 
