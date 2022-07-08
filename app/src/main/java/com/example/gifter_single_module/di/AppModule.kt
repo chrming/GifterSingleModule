@@ -49,16 +49,6 @@ class AppModule {
         ).build()
     }
 
-/*    @Provides
-    @Singleton
-    fun providingProfileDatabase(app: Application): ProfileDatabase {
-        return Room.databaseBuilder(
-            app,
-            ProfileDatabase::class.java,
-            ProfileDatabase.DATABASE_NAME
-        ).build()
-    }
-*/
     // Provide Repositories
     @Provides
     @Singleton

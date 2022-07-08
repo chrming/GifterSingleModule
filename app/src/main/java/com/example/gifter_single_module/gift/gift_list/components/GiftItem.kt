@@ -1,13 +1,11 @@
 package com.example.gifter_single_module.gift.gift_list.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gifter_single_module.gift.common.components.GiftImage
+import com.example.gifter_single_module.gift.util.GiftDetailImage
 import com.example.gifter_single_module.gift.model.Gift
 
 @Preview
@@ -27,7 +27,8 @@ fun PreviewGiftItem() {
         title = "Gift's title",
         description = "Gifts short description",
         price = 20.0f,
-        mark = "Mark"
+        mark = "Mark",
+        image = GiftDetailImage()
     )
     GiftItem(gift = gift, onClick = {}, onDeleteClick = {})
 
@@ -128,13 +129,12 @@ fun GiftItem(
                         .weight(1f)
                 )
                 {
-                    // Place for a picture
-                    Image(
+                    GiftImage(
                         modifier = modifier
                             .fillMaxWidth()
                             .height(85.dp),
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Gift's image"
+                        sourceType = gift.image.uploadOption,
+                        source = gift.image.source
                     )
                 }
                 Column {

@@ -9,6 +9,8 @@ import com.example.gifter_single_module.gift.model.Gift
 import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
 import com.example.gifter_single_module.gift.model.ProfileNameId
+import com.example.gifter_single_module.gift.util.GiftDetailImage
+import com.example.gifter_single_module.gift.util.ImageSource
 import com.example.gifter_single_module.gift.util.TextError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -23,7 +25,7 @@ class GiftDetailViewModel @Inject constructor(
     private val giftUseCase: GiftDetailUseCaseWrapper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _giftImage = mutableStateOf(GiftDetailImageState())
+    private val _giftImage = mutableStateOf(GiftDetailImage())
     val giftImage = _giftImage
 
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
@@ -44,6 +46,7 @@ class GiftDetailViewModel @Inject constructor(
     private val _ownerList = mutableListOf<ProfileNameId>()
     val ownerList = _ownerList
 
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -53,41 +56,49 @@ class GiftDetailViewModel @Inject constructor(
     private val _textError = mutableStateOf(TextError())
     val textError = _textError
 
+
     private var currentGiftId: Int? = null
     var currentOwnerId: Int? = null
 
     private var getProfilesJob: Job? = null
+
 
     init {
         getProfileNames()
         savedStateHandle.get<Int>("giftId")?.let { giftId ->
             if (giftId != -1) {
                 viewModelScope.launch {
-                    giftUseCase.getGift(giftId)?.also {
+                    giftUseCase.getGift(giftId)?.also { gift ->
                         _giftTitle.value = giftTitle.value.copy(
-                            text = it.title,
+                            text = gift.title,
                             isHintVisible = false
                         )
                         _giftDescription.value = giftDescription.value.copy(
-                            text = it.description,
+                            text = gift.description,
                             isHintVisible = false
                         )
                         _giftOwnersName.value = giftOwnersName.value.copy(
-                            text = it.ownerName,
+                            text = gift.ownerName,
                             isHintVisible = false
                         )
                         _giftPrice.value = giftPrice.value.copy(
-                            text = it.price.toString(),
+                            text = gift.price.toString(),
                             isHintVisible = false
                         )
-                        it.mark?.let { it ->
+                        gift.mark?.let { it ->
                             _giftMark.value = giftMark.value.copy(
                                 text = it,
                                 isHintVisible = false
                             )
                         }
-                        currentGiftId = it.giftId
-                        currentOwnerId = it.ownerId
+                        gift.image.source?.let { source ->
+                            _giftImage.value = giftImage.value.copy(
+                                uploadOption = ImageSource.URL,
+                                source = source
+                            )
+                        }
+                        currentGiftId = gift.giftId
+                        currentOwnerId = gift.ownerId
                     }
                 }
             }
@@ -183,6 +194,24 @@ class GiftDetailViewModel @Inject constructor(
                     source = event.value
                 )
             }
+            is GiftDetailEvent.CanceledRequest -> {
+                _giftImage.value = giftImage.value.copy(
+                    uploadOption = ImageSource.NONE,
+                    source = null
+                )
+            }
+            is GiftDetailEvent.SubmitRequest -> {
+                if (_imageAlert.value.url) {
+                    _giftImage.value = giftImage.value.copy(
+                        uploadOption = ImageSource.URL
+                    )
+                }
+                if (_imageAlert.value.storage) {
+                    _giftImage.value = giftImage.value.copy(
+                        uploadOption = ImageSource.STORAGE
+                    )
+                }
+            }
             is GiftDetailEvent.SaveGift -> {
                 viewModelScope.launch {
                     try {
@@ -195,7 +224,8 @@ class GiftDetailViewModel @Inject constructor(
                                 mark = giftMark.value.text,
                                 price = giftPrice.value.text.toFloat(),
                                 giftId = currentGiftId,
-                                ownerId = currentOwnerId
+                                ownerId = currentOwnerId,
+                                image = giftImage.value
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveGift)

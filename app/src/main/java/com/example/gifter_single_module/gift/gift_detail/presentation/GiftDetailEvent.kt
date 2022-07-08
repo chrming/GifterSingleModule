@@ -16,7 +16,7 @@ sealed class GiftDetailEvent {
     // mark
     data class EnteredMark(val value: String) : GiftDetailEvent()
 
-    // picture
+    // picture alert
     data class IsAlert(val value: Boolean) : GiftDetailEvent()
 
     // URL
@@ -24,6 +24,12 @@ sealed class GiftDetailEvent {
 
     // Storage
     data class EnteredStoragePath(val value: String) : GiftDetailEvent()
+
+    // URL / Storage request cancel
+    object CanceledRequest : GiftDetailEvent()
+
+    // URL / Storage request submit
+    object SubmitRequest : GiftDetailEvent()
 
     // save gift
     object SaveGift : GiftDetailEvent()

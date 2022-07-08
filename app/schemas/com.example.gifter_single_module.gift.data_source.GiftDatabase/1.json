@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2c36deb0461f40233119e1e5bd1f7e16",
+    "identityHash": "747275a996b2662f397072bea9271b36",
     "entities": [
       {
         "tableName": "Gift",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`giftId` INTEGER, `ownerId` INTEGER, `ownerName` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `mark` TEXT, `price` REAL NOT NULL, PRIMARY KEY(`giftId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`giftId` INTEGER, `ownerId` INTEGER, `ownerName` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `mark` TEXT, `price` REAL NOT NULL, `uploadOption` TEXT NOT NULL, `source` TEXT, PRIMARY KEY(`giftId`))",
         "fields": [
           {
             "fieldPath": "giftId",
@@ -49,6 +49,18 @@
             "columnName": "price",
             "affinity": "REAL",
             "notNull": true
+          },
+          {
+            "fieldPath": "image.uploadOption",
+            "columnName": "uploadOption",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image.source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -102,7 +114,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2c36deb0461f40233119e1e5bd1f7e16')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '747275a996b2662f397072bea9271b36')"
     ]
   }
 }

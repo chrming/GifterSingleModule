@@ -13,11 +13,13 @@ import androidx.compose.material.icons.filled.Storage
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.example.gifter_single_module.components.ErrorMessageText
+import com.example.gifter_single_module.gift.common.components.GiftImage
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailViewModel
 import com.example.gifter_single_module.gift.gift_detail.presentation.UiEvent
@@ -29,7 +31,6 @@ fun GiftDetailScreen(
     viewModel: GiftDetailViewModel = hiltViewModel(),
     onLaunch: () -> Unit,
 ) {
-    // Temp for building list of ownerNames
     val owners = viewModel.ownerList
 
     val giftTitleState = viewModel.giftTitle.value
@@ -75,17 +76,25 @@ fun GiftDetailScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.Top
         ) {
 
-
-            Image(
-                imageVector = Icons.Default.AddAPhoto,
-                contentDescription = null,
+            Box(
                 modifier = Modifier
-                    .size(200.dp)
-                    .clickable { viewModel.onEvent(GiftDetailEvent.IsAlert(true)) }
-            )
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                GiftImage(
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.onEvent(GiftDetailEvent.IsAlert(true))
+                        },
+                    source = giftImageState.source,
+                    sourceType = giftImageState.uploadOption
+                )
+            }
+
             if (alertState.isAlert) {
                 AlertDialog(
                     onDismissRequest = { viewModel.onEvent(GiftDetailEvent.IsAlert(false)) },
@@ -100,7 +109,7 @@ fun GiftDetailScreen(
                         ) {
                             Text(text = "Enter URL for Image or choose from your storage:")
                             OutlinedTextField(
-                                value = giftImageState.source,
+                                value = giftImageState.source ?: "",
                                 onValueChange = {
                                     viewModel.onEvent(
                                         GiftDetailEvent.EnteredUrl(
@@ -131,6 +140,7 @@ fun GiftDetailScreen(
                     confirmButton = {
                         Button(onClick = {
                             viewModel.onEvent(GiftDetailEvent.IsAlert(false))
+                            viewModel.onEvent(GiftDetailEvent.SubmitRequest)
                         }) {
                             Text(text = "Submit")
                         }
@@ -139,7 +149,7 @@ fun GiftDetailScreen(
                         Button(
                             onClick = {
                                 viewModel.onEvent(GiftDetailEvent.IsAlert(false))
-                                viewModel.onEvent(GiftDetailEvent.EnteredUrl(""))
+                                viewModel.onEvent(GiftDetailEvent.CanceledRequest)
                             }
                         ) {
                             Text(text = "Cancel")
@@ -150,7 +160,7 @@ fun GiftDetailScreen(
             OutlinedTextField(
                 value = giftTitleState.text,
                 onValueChange = {
-                    viewModel.onEvent(GiftDetailEvent.IsAlert(false))
+                    viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
                 },
                 isError = textError.titleError,
                 modifier = Modifier.fillMaxWidth(),

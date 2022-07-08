@@ -21,11 +21,15 @@ import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.ImageLoader
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import com.example.gifter_single_module.components.bottom_navigation.BottomNavigationBar
 import com.example.gifter_single_module.components.bottom_navigation.BottomNavigationItem
 import com.example.gifter_single_module.gift.gift_detail.GiftDetailScreen
@@ -53,6 +57,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Gifter() {
     val navController = rememberNavController()
+    val imageLoader = ImageLoader.Builder(context = LocalContext.current)
+
     Scaffold(bottomBar = {
         BottomNavigationBar(
             navController = navController,

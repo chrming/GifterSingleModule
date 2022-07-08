@@ -10,7 +10,7 @@ class ValidateUrlUseCase {
                 errorMessages = "URL cannot be blank or empty."
             )
         }*/
-        if (!url.contains(regex = Regex("""((https://www.|https://)?(.)(\.jpg)|())"""))) {
+        if (!url.contains(regex = Regex("""((https://www.|https://)?(.)|())"""))) {
             return Result(
                 isSuccess = false,
                 errorMessages = "Invalid URL"
