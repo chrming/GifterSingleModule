@@ -2,7 +2,7 @@ package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
 import com.example.gifter_single_module.gift.model.InvalidGiftException
 import com.example.gifter_single_module.gift.util.GiftTextError
-import com.example.gifter_single_module.gift.util.TextError
+import com.example.gifter_single_module.util.TextError
 
 
 class ValidateSaveGiftUseCase {

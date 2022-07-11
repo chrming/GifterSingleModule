@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_detail
+package com.example.gifter_single_module.profile.profile_add_edit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gifter_single_module.components.ErrorMessageText
-import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileAddEditEvent
-import com.example.gifter_single_module.profile.profile_detail.presentation.ProfileAddEditViewModel
-import com.example.gifter_single_module.profile.profile_detail.presentation.UiEvent
+import com.example.gifter_single_module.profile.profile_add_edit.presentation.ProfileAddEditEvent
+import com.example.gifter_single_module.profile.profile_add_edit.presentation.ProfileAddEditViewModel
+import com.example.gifter_single_module.profile.profile_detail.presentation.event.UiEvent
 import com.example.gifter_single_module.profile.profile_detail.util.DateTransformation
 import com.example.gifter_single_module.profile.profile_detail.util.DayMonthTransformation
 import com.example.gifter_single_module.profile.util.MaxChars
@@ -30,7 +30,7 @@ fun AddEditProfileScreen(
     val profileNameState = viewModel.profileName.value
     val profileBirthdayDateState = viewModel.profileBirthdayDate.value
     val profileNamedayDateState = viewModel.profileNamedayDate.value
-    val textError = viewModel.textError.value
+    val textError = viewModel.profileTextError.value
 
     val scaffoldState = rememberScaffoldState()
 
@@ -75,13 +75,13 @@ fun AddEditProfileScreen(
                 )
                 OutlinedTextField(
                     value = profileNameState.text,
-                    placeholder = {Text(text = profileNameState.hint)},
+                    placeholder = { Text(text = profileNameState.hint) },
                     onValueChange = {
                         if (it.length <= MaxChars.name) {
                             viewModel.onEvent(ProfileAddEditEvent.EnteredProfileName(it))
                         }
                     },
-                    isError = textError.nameError,
+                    isError = textError.name.isError,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Name") },
                     singleLine = true,
@@ -90,19 +90,19 @@ fun AddEditProfileScreen(
                     }
                 )
                 ErrorMessageText(
-                    isError = textError.nameError,
-                    errorMessage = textError.nameErrorMessage
+                    isError = textError.name.isError,
+                    errorMessage = textError.name.errorMessage
                 )
 
                 OutlinedTextField(
                     value = profileBirthdayDateState.text,
-                    placeholder = {Text(text = profileBirthdayDateState.hint)},
+                    placeholder = { Text(text = profileBirthdayDateState.hint) },
                     onValueChange = {
                         if (it.length <= MaxChars.birthdayDate) {
                             viewModel.onEvent(ProfileAddEditEvent.EnteredProfileBirthdayDate(it))
                         }
                     },
-                    isError = textError.birthdayDateError,
+                    isError = textError.birthdayDate.isError,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Birthday Date") },
                     singleLine = true,
@@ -112,19 +112,19 @@ fun AddEditProfileScreen(
                     visualTransformation = DateTransformation()
                 )
                 ErrorMessageText(
-                    isError = textError.birthdayDateError,
-                    errorMessage = textError.birthdayDateErrorMessage
+                    isError = textError.birthdayDate.isError,
+                    errorMessage = textError.birthdayDate.errorMessage
                 )
 
                 OutlinedTextField(
                     value = profileNamedayDateState.text,
-                    placeholder = {Text(text = profileNamedayDateState.hint)},
+                    placeholder = { Text(text = profileNamedayDateState.hint) },
                     onValueChange = {
                         if (it.length <= MaxChars.namedayDate) {
                             viewModel.onEvent(ProfileAddEditEvent.EnteredProfileNamedayDate(it))
                         }
                     },
-                    isError = textError.nameError,
+                    isError = textError.name.isError,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Nameday Date") },
                     singleLine = true,
@@ -134,8 +134,8 @@ fun AddEditProfileScreen(
                     visualTransformation = DayMonthTransformation()
                 )
                 ErrorMessageText(
-                    isError = textError.namedayDateError,
-                    errorMessage = textError.namedayDateErrorMessage
+                    isError = textError.namedayDate.isError,
+                    errorMessage = textError.namedayDate.errorMessage
                 )
             }
         }

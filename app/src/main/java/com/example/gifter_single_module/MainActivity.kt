@@ -28,13 +28,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
 import com.example.gifter_single_module.components.bottom_navigation.BottomNavigationBar
 import com.example.gifter_single_module.components.bottom_navigation.BottomNavigationItem
 import com.example.gifter_single_module.gift.gift_detail.GiftDetailScreen
 import com.example.gifter_single_module.gift.gift_list.GiftListScreen
-import com.example.gifter_single_module.profile.profile_detail.AddEditProfileScreen
+import com.example.gifter_single_module.profile.profile_add_edit.AddEditProfileScreen
 import com.example.gifter_single_module.profile.profile_detail.ProfileDetailScreen
 import com.example.gifter_single_module.profile.profile_list.ProfileListScreen
 import com.example.gifter_single_module.ui.theme.Gifter_single_moduleTheme

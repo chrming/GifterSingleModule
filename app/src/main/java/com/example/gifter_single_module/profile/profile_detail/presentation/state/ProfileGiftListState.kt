@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_detail.presentation
+package com.example.gifter_single_module.profile.profile_detail.presentation.state
 
 import com.example.gifter_single_module.gift.model.Gift
 import com.example.gifter_single_module.profile.profile_list.util.ProfileOrder

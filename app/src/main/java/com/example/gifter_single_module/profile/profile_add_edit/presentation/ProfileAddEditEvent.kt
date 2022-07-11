@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_detail.presentation
+package com.example.gifter_single_module.profile.profile_add_edit.presentation
 
 sealed class ProfileAddEditEvent {
 

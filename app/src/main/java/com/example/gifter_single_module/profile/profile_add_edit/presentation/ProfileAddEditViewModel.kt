@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.profile.profile_detail.presentation
+package com.example.gifter_single_module.profile.profile_add_edit.presentation
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gifter_single_module.profile.model.InvalidProfileException
 import com.example.gifter_single_module.profile.model.Profile
-import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileAddEditUseCaseWrapper
-import com.example.gifter_single_module.profile.util.TextError
+import com.example.gifter_single_module.profile.profile_add_edit.use_case.ProfileAddEditUseCaseWrapper
+import com.example.gifter_single_module.profile.profile_detail.presentation.event.UiEvent
+import com.example.gifter_single_module.profile.profile_detail.presentation.state.ProfileTextFieldState
+import com.example.gifter_single_module.profile.util.ProfileTextError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -33,11 +35,12 @@ class ProfileAddEditViewModel @Inject constructor(
         mutableStateOf(ProfileTextFieldState(hint = "29 / 11"))
     val profileNamedayDate = _profileNamedayDate
 
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private val _textError = mutableStateOf(TextError())
-    val textError = _textError
+    private val _profileTextError = mutableStateOf(ProfileTextError())
+    val profileTextError = _profileTextError
 
     var currentProfileId: Int? = null
 
@@ -72,14 +75,16 @@ class ProfileAddEditViewModel @Inject constructor(
     fun onEvent(event: ProfileAddEditEvent) {
         when (event) {
             is ProfileAddEditEvent.EnteredProfileName -> {
-                val validationResult = profileUseCase.validateName(event.value)
-                _textError.value = textError.value.copy(
-                    nameError = !validationResult.isSuccess,
-                    nameErrorMessage = validationResult.errorMessages
+                _profileTextError.value = profileTextError.value.copy(
+                    name = profileUseCase.validateName(event.value)
                 )
-                if (_textError.value.nameError) {
+                if (_profileTextError.value.name.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _profileTextError.value.name.errorMessage ?: "Invalid name"
+                            )
+                        )
                     }
                 }
                 _profileName.value = profileName.value.copy(
@@ -87,14 +92,17 @@ class ProfileAddEditViewModel @Inject constructor(
                 )
             }
             is ProfileAddEditEvent.EnteredProfileBirthdayDate -> {
-                val validationResult = profileUseCase.validateBirthdayDate(event.value)
-                _textError.value = textError.value.copy(
-                    birthdayDateError = !validationResult.isSuccess,
-                    birthdayDateErrorMessage = validationResult.errorMessages
+                _profileTextError.value = profileTextError.value.copy(
+                    birthdayDate = profileUseCase.validateBirthdayDate(event.value)
                 )
-                if (_textError.value.birthdayDateError) {
+                if (_profileTextError.value.birthdayDate.isError) {
                     viewModelScope.launch() {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _profileTextError.value.birthdayDate.errorMessage
+                                    ?: "Invalid birthday date"
+                            )
+                        )
                     }
                 }
                 _profileBirthdayDate.value = profileBirthdayDate.value.copy(
@@ -102,14 +110,17 @@ class ProfileAddEditViewModel @Inject constructor(
                 )
             }
             is ProfileAddEditEvent.EnteredProfileNamedayDate -> {
-                val validationResult = profileUseCase.validateNamedayDate(event.value)
-                _textError.value = textError.value.copy(
-                    namedayDateError = !validationResult.isSuccess,
-                    namedayDateErrorMessage = validationResult.errorMessages
+                _profileTextError.value = profileTextError.value.copy(
+                    namedayDate = profileUseCase.validateNamedayDate(event.value)
                 )
-                if (_textError.value.namedayDateError) {
+                if (_profileTextError.value.namedayDate.isError) {
                     viewModelScope.launch() {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _profileTextError.value.namedayDate.errorMessage
+                                    ?: "Invalid nameday date"
+                            )
+                        )
                     }
                 }
                 _profileNamedayDate.value = profileNamedayDate.value.copy(
@@ -119,8 +130,8 @@ class ProfileAddEditViewModel @Inject constructor(
             ProfileAddEditEvent.SaveProfile -> {
                 viewModelScope.launch {
                     try {
-                        val result = profileUseCase.validateSaveProfile(textError.value)
-                        if (result.isSuccess) {
+                        val result = profileUseCase.validateSaveProfile(profileTextError.value)
+                        if (result.isError) {
                             profileUseCase.addEditProfile(
                                 Profile(
                                     profileId = currentProfileId,

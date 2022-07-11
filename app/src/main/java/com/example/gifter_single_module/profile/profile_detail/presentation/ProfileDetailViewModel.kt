@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder
 import com.example.gifter_single_module.profile.model.Profile
+import com.example.gifter_single_module.profile.profile_detail.presentation.state.ProfileGiftListState
 import com.example.gifter_single_module.profile.profile_detail.use_case.ProfileDetailUseCaseWrapper
 import com.example.gifter_single_module.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel

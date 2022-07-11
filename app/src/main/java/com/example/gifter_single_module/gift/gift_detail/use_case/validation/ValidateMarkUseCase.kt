@@ -1,7 +1,7 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
 import com.example.gifter_single_module.gift.util.MaxChars
-import com.example.gifter_single_module.gift.util.TextError
+import com.example.gifter_single_module.util.TextError
 
 class ValidateMarkUseCase {
     operator fun invoke(mark: String): TextError {
