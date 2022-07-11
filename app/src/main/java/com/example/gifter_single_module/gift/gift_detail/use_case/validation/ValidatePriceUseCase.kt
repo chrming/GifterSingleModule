@@ -1,21 +1,18 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
+import com.example.gifter_single_module.gift.util.TextError
+
 class ValidatePriceUseCase {
-    operator fun invoke(price: String): Result {
+    operator fun invoke(price: String): TextError {
         if (price.isBlank() || price.isEmpty()) {
-            return Result(isSuccess = false, errorMessages = "Price cannot be blank or empty.")
+            return TextError(isError = true, errorMessage = "Price cannot be blank or empty.")
         }
         if (!price.contains(regex = Regex("""[\d]+(\.[\d]{0,2})$"""))) {
-            return Result(
-                isSuccess = false,
-                errorMessages = "Price must be a number with two decimal places."
+            return TextError(
+                isError = true,
+                errorMessage = "Price must be a number with two decimal places."
             )
         }
-        return Result(isSuccess = true)
+        return TextError(isError = false)
     }
-
-    data class Result(
-        val isSuccess: Boolean,
-        val errorMessages: String? = null
-    )
 }

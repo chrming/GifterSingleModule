@@ -3,6 +3,9 @@ package com.example.gifter_single_module.gift.gift_list.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gifter_single_module.gift.gift_list.presentation.event.GiftListEvent
+import com.example.gifter_single_module.gift.gift_list.presentation.event.UiEvent
+import com.example.gifter_single_module.gift.gift_list.presentation.state.GiftListState
 import com.example.gifter_single_module.gift.model.Gift
 import com.example.gifter_single_module.gift.gift_list.use_case.GiftListUseCaseWrapper
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder

@@ -1,28 +1,24 @@
 package com.example.gifter_single_module.gift.gift_detail
 //TODO Refactor to AddEditGiftScreen and create separate screen GiftDetailScreen
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.example.gifter_single_module.components.ErrorMessageText
 import com.example.gifter_single_module.gift.common.components.GiftImage
-import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailEvent
+import com.example.gifter_single_module.gift.gift_detail.presentation.event.GiftDetailEvent
 import com.example.gifter_single_module.gift.gift_detail.presentation.GiftDetailViewModel
-import com.example.gifter_single_module.gift.gift_detail.presentation.UiEvent
+import com.example.gifter_single_module.gift.gift_detail.presentation.event.UiEvent
 import com.example.gifter_single_module.gift.util.MaxChars
 import kotlinx.coroutines.flow.collectLatest
 
@@ -40,7 +36,7 @@ fun GiftDetailScreen(
     val giftMarkState = viewModel.giftMark.value
     val giftImageState = viewModel.giftImage.value
     val alertState = viewModel.imageAlert.value //should be handled in a different manner
-    val textError = viewModel.textError.value
+    val textError = viewModel.giftTextError.value
 
     val scaffoldState = rememberScaffoldState()
     var expanded by remember { mutableStateOf(false) }
@@ -117,7 +113,7 @@ fun GiftDetailScreen(
                                         )
                                     )
                                 },
-                                isError = textError.urlError,
+                                isError = textError.url.isError,
                                 modifier = Modifier.fillMaxWidth(),
                                 label = { Text("Image URL") },
                                 singleLine = true,
@@ -132,8 +128,8 @@ fun GiftDetailScreen(
                                 }
                             )
                             ErrorMessageText(
-                                isError = textError.urlError,
-                                errorMessage = textError.urlErrorMessage
+                                isError = textError.url.isError,
+                                errorMessage = textError.url.errorMessage
                             )
                         }
                     },
@@ -162,7 +158,7 @@ fun GiftDetailScreen(
                 onValueChange = {
                     viewModel.onEvent(GiftDetailEvent.EnteredTitle(it))
                 },
-                isError = textError.titleError,
+                isError = textError.title.isError,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Title") },
                 singleLine = true,
@@ -171,8 +167,8 @@ fun GiftDetailScreen(
                 }
             )
             ErrorMessageText(
-                isError = textError.titleError,
-                errorMessage = textError.titleErrorMessage
+                isError = textError.title.isError,
+                errorMessage = textError.title.errorMessage
             )
 
             Row {
@@ -188,7 +184,7 @@ fun GiftDetailScreen(
                         readOnly = true,
                         modifier = Modifier.weight(1f),
                         label = { Text("Gift's owner") },
-                        isError = textError.ownerNameError,
+                        isError = textError.ownerName.isError,
                         placeholder = { Text(giftOwnerNameState.hint) },
                         trailingIcon = {
                             IconButton(onClick = {
@@ -221,8 +217,8 @@ fun GiftDetailScreen(
                         }
                     }
                     ErrorMessageText(
-                        isError = textError.ownerNameError,
-                        errorMessage = textError.ownerNameErrorMessage
+                        isError = textError.ownerName.isError,
+                        errorMessage = textError.ownerName.errorMessage
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -235,14 +231,14 @@ fun GiftDetailScreen(
 
                         label = { Text("Mark") },
                         singleLine = true,
-                        isError = textError.markError,
+                        isError = textError.mark.isError,
                         trailingIcon = {
                             Text(text = giftMarkState.text.length.toString() + "/" + MaxChars.mark.toString())
                         }
                     )
                     ErrorMessageText(
-                        isError = textError.markError,
-                        errorMessage = textError.markErrorMessage
+                        isError = textError.mark.isError,
+                        errorMessage = textError.mark.errorMessage
                     )
                 }
             }
@@ -255,14 +251,14 @@ fun GiftDetailScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Description") },
                 maxLines = 10,
-                isError = textError.descriptionError,
+                isError = textError.description.isError,
                 trailingIcon = {
                     Text(text = giftDescriptionState.text.length.toString() + "/" + MaxChars.description.toString())
                 }
             )
             ErrorMessageText(
-                isError = textError.descriptionError,
-                errorMessage = textError.descriptionErrorMessage
+                isError = textError.description.isError,
+                errorMessage = textError.description.errorMessage
             )
 
             OutlinedTextField(
@@ -274,14 +270,14 @@ fun GiftDetailScreen(
                 label = { Text("Price") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
-                isError = textError.priceError,
+                isError = textError.price.isError,
                 trailingIcon = {
                     Text(text = "zł")
                 }
             )
             ErrorMessageText(
-                isError = textError.priceError,
-                errorMessage = textError.priceErrorMessage
+                isError = textError.price.isError,
+                errorMessage = textError.price.errorMessage
             )
         }
     }

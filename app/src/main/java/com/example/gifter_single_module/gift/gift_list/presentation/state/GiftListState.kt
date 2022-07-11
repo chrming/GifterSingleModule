@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_list.presentation
+package com.example.gifter_single_module.gift.gift_list.presentation.state
 
 import com.example.gifter_single_module.gift.model.Gift
 import com.example.gifter_single_module.gift.gift_list.util.GiftsOrder

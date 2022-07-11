@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gifter_single_module.gift.common.components.GiftImage
-import com.example.gifter_single_module.gift.util.GiftDetailImage
+import com.example.gifter_single_module.gift.common.state.ImageState
 import com.example.gifter_single_module.gift.model.Gift
 
 @Preview
@@ -28,7 +28,7 @@ fun PreviewGiftItem() {
         description = "Gifts short description",
         price = 20.0f,
         mark = "Mark",
-        image = GiftDetailImage()
+        image = ImageState()
     )
     GiftItem(gift = gift, onClick = {}, onDeleteClick = {})
 

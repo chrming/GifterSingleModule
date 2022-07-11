@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gifter_single_module.gift.gift_list.components.GiftItem
 import com.example.gifter_single_module.gift.gift_list.components.OrderSection
-import com.example.gifter_single_module.gift.gift_list.presentation.GiftListEvent
+import com.example.gifter_single_module.gift.gift_list.presentation.event.GiftListEvent
 import com.example.gifter_single_module.gift.gift_list.presentation.GiftListViewModel
-import com.example.gifter_single_module.gift.gift_list.presentation.UiEvent
+import com.example.gifter_single_module.gift.gift_list.presentation.event.UiEvent
 import com.example.gifter_single_module.util.routs.Screen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

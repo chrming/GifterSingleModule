@@ -1,4 +1,4 @@
-package com.example.gifter_single_module.gift.gift_detail.presentation
+package com.example.gifter_single_module.gift.gift_detail.presentation.event
 
 sealed class GiftDetailEvent {
     // title

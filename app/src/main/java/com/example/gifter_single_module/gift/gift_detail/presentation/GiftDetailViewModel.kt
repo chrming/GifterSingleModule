@@ -5,16 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gifter_single_module.gift.common.state.ImageSource
+import com.example.gifter_single_module.gift.common.state.ImageState
+import com.example.gifter_single_module.gift.gift_detail.presentation.event.GiftDetailEvent
+import com.example.gifter_single_module.gift.gift_detail.presentation.event.UiEvent
+import com.example.gifter_single_module.gift.gift_detail.presentation.state.GiftDetailImageAlertState
+import com.example.gifter_single_module.gift.gift_detail.presentation.state.GiftTextFieldState
+import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
 import com.example.gifter_single_module.gift.model.Gift
 import com.example.gifter_single_module.gift.model.InvalidGiftException
-import com.example.gifter_single_module.gift.gift_detail.use_case.GiftDetailUseCaseWrapper
 import com.example.gifter_single_module.gift.model.ProfileNameId
-import com.example.gifter_single_module.gift.util.GiftDetailImage
-import com.example.gifter_single_module.gift.util.ImageSource
-import com.example.gifter_single_module.gift.util.TextError
+import com.example.gifter_single_module.gift.util.GiftTextError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +32,7 @@ class GiftDetailViewModel @Inject constructor(
     private val giftUseCase: GiftDetailUseCaseWrapper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _giftImage = mutableStateOf(GiftDetailImage())
+    private val _giftImage = mutableStateOf(ImageState())
     val giftImage = _giftImage
 
     private val _giftTitle = mutableStateOf(GiftTextFieldState(hint = "Enter title"))
@@ -43,9 +50,9 @@ class GiftDetailViewModel @Inject constructor(
     private val _giftMark = mutableStateOf(GiftTextFieldState(hint = "Mark: Sony"))
     val giftMark = _giftMark
 
+
     private val _ownerList = mutableListOf<ProfileNameId>()
     val ownerList = _ownerList
-
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -53,8 +60,8 @@ class GiftDetailViewModel @Inject constructor(
     private val _imageAlert = mutableStateOf(GiftDetailImageAlertState())
     val imageAlert = _imageAlert
 
-    private val _textError = mutableStateOf(TextError())
-    val textError = _textError
+    private val _giftTextError = mutableStateOf(GiftTextError())
+    val giftTextError = _giftTextError
 
 
     private var currentGiftId: Int? = null
@@ -108,14 +115,16 @@ class GiftDetailViewModel @Inject constructor(
     fun onEvent(event: GiftDetailEvent) {
         when (event) {
             is GiftDetailEvent.EnteredTitle -> {
-                val validationResult = giftUseCase.validateTitle(event.value)
-                _textError.value = textError.value.copy(
-                    titleError = !validationResult.isSuccess,
-                    titleErrorMessage = validationResult.errorMessages
+                _giftTextError.value = giftTextError.value.copy(
+                    title = giftUseCase.validateTitle(event.value)
                 )
-                if (_textError.value.titleError) {
+                if (_giftTextError.value.title.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _giftTextError.value.title.errorMessage ?: "Invalid title"
+                            )
+                        )
                     }
                 }
                 _giftTitle.value = giftTitle.value.copy(
@@ -123,14 +132,17 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredDescription -> {
-                val validationResult = giftUseCase.validateDescription(event.value)
-                _textError.value = textError.value.copy(
-                    descriptionError = !validationResult.isSuccess,
-                    descriptionErrorMessage = validationResult.errorMessages
+                _giftTextError.value = giftTextError.value.copy(
+                    description = giftUseCase.validateDescription(event.value)
                 )
-                if (_textError.value.descriptionError) {
+                if (_giftTextError.value.description.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _giftTextError.value.description.errorMessage
+                                    ?: "Invalid description"
+                            )
+                        )
                     }
                 }
                 _giftDescription.value = giftDescription.value.copy(
@@ -143,14 +155,16 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredPrice -> {
-                val validationResult = giftUseCase.validatePrice(event.value)
-                _textError.value = textError.value.copy(
-                    priceError = !validationResult.isSuccess,
-                    priceErrorMessage = validationResult.errorMessages
+                _giftTextError.value = giftTextError.value.copy(
+                    price = giftUseCase.validatePrice(event.value)
                 )
-                if (_textError.value.priceError) {
+                if (_giftTextError.value.price.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _giftTextError.value.price.errorMessage ?: "Invalid price"
+                            )
+                        )
                     }
                 }
                 _giftPrice.value = giftPrice.value.copy(
@@ -158,14 +172,16 @@ class GiftDetailViewModel @Inject constructor(
                 )
             }
             is GiftDetailEvent.EnteredMark -> {
-                val validationResult = giftUseCase.validateMark(event.value)
-                _textError.value = textError.value.copy(
-                    markError = !validationResult.isSuccess,
-                    markErrorMessage = validationResult.errorMessages
+                _giftTextError.value = giftTextError.value.copy(
+                    mark = giftUseCase.validateMark(event.value)
                 )
-                if (_textError.value.markError) {
+                if (_giftTextError.value.mark.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _giftTextError.value.mark.errorMessage ?: "Invalid mark."
+                            )
+                        )
                     }
                 }
                 _giftMark.value = giftMark.value.copy(
@@ -179,14 +195,16 @@ class GiftDetailViewModel @Inject constructor(
             }
             is GiftDetailEvent.EnteredStoragePath -> TODO()
             is GiftDetailEvent.EnteredUrl -> {
-                val validationResult = giftUseCase.validateUrl(event.value)
-                _textError.value = textError.value.copy(
-                    urlError = !validationResult.isSuccess,
-                    urlErrorMessage = validationResult.errorMessages
+                _giftTextError.value = giftTextError.value.copy(
+                    url = giftUseCase.validateUrl(event.value)
                 )
-                if (_textError.value.urlError) {
+                if (_giftTextError.value.url.isError) {
                     viewModelScope.launch {
-                        _eventFlow.emit(UiEvent.ShowSnackbar(validationResult.errorMessages!!))
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                _giftTextError.value.url.errorMessage ?: "Invalid URL"
+                            )
+                        )
                     }
                 }
                 _giftImage.value = giftImage.value.copy(
@@ -215,7 +233,7 @@ class GiftDetailViewModel @Inject constructor(
             is GiftDetailEvent.SaveGift -> {
                 viewModelScope.launch {
                     try {
-                        giftUseCase.validateSaveGift(textError.value)
+                        giftUseCase.validateSaveGift(giftTextError.value)
                         giftUseCase.addEditGift.invoke(
                             Gift(
                                 title = giftTitle.value.text,

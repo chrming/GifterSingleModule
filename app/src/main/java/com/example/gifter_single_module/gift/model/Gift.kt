@@ -3,7 +3,7 @@ package com.example.gifter_single_module.gift.model
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.gifter_single_module.gift.util.GiftDetailImage
+import com.example.gifter_single_module.gift.common.state.ImageState
 
 @Entity
 data class Gift(
@@ -14,7 +14,7 @@ data class Gift(
     val ownerId: Int? = null,
 
     @Embedded
-    val image: GiftDetailImage,
+    val image: ImageState,
 
     val ownerName: String,
 

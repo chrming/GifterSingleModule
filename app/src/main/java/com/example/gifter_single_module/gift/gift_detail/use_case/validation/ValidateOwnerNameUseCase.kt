@@ -1,14 +1,12 @@
 package com.example.gifter_single_module.gift.gift_detail.use_case.validation
 
+import com.example.gifter_single_module.gift.util.TextError
+
 class ValidateOwnerNameUseCase {
-    operator fun invoke(ownerName: String): Result {
+    operator fun invoke(ownerName: String): TextError {
         if (ownerName.isBlank() || ownerName.isEmpty()) {
-            return Result(isSuccess = false, errorMessages = "Owner name cannot be blank or empty.")
+            return TextError(isError = true, errorMessage = "Owner name cannot be blank or empty.")
         }
-        return Result(isSuccess = true)
+        return TextError(isError = false)
     }
-    data class Result(
-        val isSuccess: Boolean,
-        val errorMessages: String? = null
-    )
 }

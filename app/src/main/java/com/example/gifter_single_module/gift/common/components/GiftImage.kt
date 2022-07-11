@@ -8,8 +8,8 @@ import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.gifter_single_module.R
-import com.example.gifter_single_module.gift.util.ImageSource
-import com.example.gifter_single_module.gift.util.ImageSource.*
+import com.example.gifter_single_module.gift.common.state.ImageSource
+import com.example.gifter_single_module.gift.common.state.ImageSource.*
 
 @Composable
 fun GiftImage(modifier: Modifier = Modifier, sourceType: ImageSource = NONE, source: String? = null) {
